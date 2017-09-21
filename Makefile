@@ -1,0 +1,35 @@
+DISTNAME= $(shell python setup.py --name | sed 's/-/_/g' )
+
+.PHONY: test
+test:
+	@rm -f coverage.xml cobertura.xml
+	python setup.py test
+
+.PHONY: clean
+clean:
+	@echo ">> Cleaning"
+	@find . -name \.AppleDouble -exec rm -rf {} +
+	@rm -rf build dist
+
+.PHONY: lint
+lint: clean
+	@echo ">> Linting"
+	@pylint --output-format=parseable --rcfile=pylintrc $(DISTNAME) test
+
+.PHONY: dist
+dist: clean
+	@echo ">> Building"
+	@python setup.py bdist_wheel
+	@echo "!! Build ready"
+
+.PHONY: listdeps
+listdeps:
+	@python setup.py listdeps | tail -n 1
+
+.PHONY: testdeps
+testdeps:
+	@python setup.py testdeps | tail -n 1
+
+.PHONY: typehint
+typehint:
+	mypy --ignore-missing-imports --follow-imports=skip $(DISTNAME)
