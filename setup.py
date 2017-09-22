@@ -8,6 +8,9 @@ from setuptools import setup, find_packages
 with open("VERSION") as fh:
     __version__ = fh.read().strip()
 
+with open("README.md", 'r') as readme:
+    LONG_DESC = readme.read()
+
 build_version = __version__
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -106,7 +109,11 @@ test_requires = [
 setup(
     name='bynder-sdk',
     version=build_version,
-    description='Bynder SDK can be used to speed up the integration of Bynder in Python',
+    description=(
+        'Bynder SDK can be used to speed up the'
+        ' integration of Bynder in Python'
+    ),
+    long_description=LONG_DESC,
     url='https://bynder.com',
     author='Bynder',
     author_email='techteam@bynder.com',
@@ -124,7 +131,6 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Software Development :: Libraries :: Application '
     ],
     zip_safe=False
 )

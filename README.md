@@ -1,6 +1,6 @@
 # Bynder Python SDK
 
-The main goal of this SDK is to speed up the integration of Bynder customers who use Python. Making it easier to connect to the Bynder API (http://docs.bynder.apiary.io) and executing requests on it.
+The main goal of this SDK is to speed up the integration of Bynder customers who use Python. Making it easier to connect to the Bynder API (http://docs.bynder.apiary.io) and execute requests on it.
 
 
 ## Requirements and dependencies
@@ -25,7 +25,7 @@ source venv/bin/activate    # activate virtual environment
 After you have successfully setup a virtual environment you can install the SDK with [pip](https://pip.pypa.io/en/stable/installing/).  Run the following command while your virtual environment is active.
 
 ```bash
-pip install bynder_sdk
+pip install bynder-sdk
 ```
 
 To use the SDK, you have to import it at the top of your file:
@@ -130,4 +130,4 @@ You can run the tests by using the command below. This will install the packages
 
 ```bash
 make test
-
+```
