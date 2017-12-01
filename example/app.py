@@ -1,5 +1,6 @@
 import time
 import configparser
+import webbrowser
 from bynder_sdk import BynderClient
 
 # Get your tokens from .ini file
@@ -25,6 +26,7 @@ if not HAS_TOKENS:
     # Get the authorise url
     authorise_url = bynder_client.authorise_url()
     print(authorise_url)
+    webbrowser.open_new_tab(authorise_url)
 
     # Sleep for a while to give you time to login using the authorise url
     time.sleep(20)
