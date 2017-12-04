@@ -40,7 +40,7 @@ To use the SDK, you have to import it at the top of your file:
 
 .. code:: python
 
-    from bynder-sdk import BynderClient 
+    from bynder_sdk import BynderClient 
 
 How to use it
 -------------

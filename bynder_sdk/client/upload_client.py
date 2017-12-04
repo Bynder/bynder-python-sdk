@@ -27,10 +27,10 @@ class UploadClient():
         return self._save_media(finalise_data['importId'], upload_data, media_id)
 
     @staticmethod
-    def _update_multipart(total_parts, init_data, part_nr):
+    def _update_multipart(filename, total_parts, init_data, part_nr):
         key = init_data['multipart_params']['key']
         init_data['multipart_params'].update({
-            'name': os.path.basename(key),
+            'name': filename,
             'chunk': part_nr,
             'chunks': total_parts,
             'Filename': key
@@ -40,7 +40,8 @@ class UploadClient():
     def _run_s3_upload(self, file_path):
         """ Uploads the media to Amazon S3 bucket-endpoint.
         """
-        init_data = self._init_upload(file_path)
+        filename = self._retrieve_filename(file_path)
+        init_data = self._init_upload(filename)
         with open(file_path, 'rb') as f:
             part_nr = 0
             total_parts = (os.fstat(f.fileno()).st_size + MAX_CHUNK_SIZE - 1) // MAX_CHUNK_SIZE
@@ -49,7 +50,7 @@ class UploadClient():
             while part_bytes:
                 part_nr = part_nr + 1
                 init_data = self._update_init_data(init_data, part_nr)
-                init_data = self._update_multipart(total_parts, init_data, part_nr)
+                init_data = self._update_multipart(filename, total_parts, init_data, part_nr)
                 self.bynder_request_handler.post_file(
                     upload_url=self.upload_url,
                     files={"file": part_bytes},
@@ -59,12 +60,11 @@ class UploadClient():
                 part_bytes = f.read(MAX_CHUNK_SIZE)
         return init_data, total_parts
 
-    def _init_upload(self, file_path):
+    def _init_upload(self, filename):
         """ Gets the URL of the Amazon S3 bucket-endpoint in the region closest to the server
         and initialises a file upload with Bynder and returns authorisation information to allow
         uploading to the Amazon S3 bucket-endpoint.
         """
-        filename = self._retrieve_filename(file_path)
         self.upload_url = self.bynder_request_handler.get(
             endpoint='/api/upload/endpoint/'
         )
@@ -80,7 +80,7 @@ class UploadClient():
         """ Updates the init data.
         """
         key = '{}/p{}'.format(
-            init_data['s3_filename'].rsplit('/')[0],
+            init_data['s3_filename'],
             part_nr
         )
         init_data['s3_filename'] = key
@@ -108,7 +108,7 @@ class UploadClient():
             payload={
                 'id': init_data['s3file']['uploadid'],
                 'targetid': init_data['s3file']['targetid'],
-                's3_filename': init_data['s3_filename'].rsplit('/', 1)[0],
+                's3_filename': init_data['s3_filename'],
                 'chunks': total_parts
             }
         )
@@ -122,7 +122,7 @@ class UploadClient():
             raise Exception("Converting media failed")
 
         save_endpoint = '/api/v4/media/save/{}/'.format(import_id)
-        if media_id is not None:
+        if media_id:
             save_endpoint = '/api/v4/media/{}/save/{}/'.format(media_id, import_id)
             data = {}
 
