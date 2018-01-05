@@ -103,14 +103,15 @@ class AssetBankClient:
             params=query
         )
 
-    def upload_file(self, file_path, brand_id, media_id: str = '', query: dict = None):
-        """ Upload file.
-        """
+    def upload_file(self, file_path: str, brand_id: str,
+                    media_id: str = '', query: dict = None):
+        """ Upload file."""
         if query is None:
             query = {}
         query['brandId'] = brand_id
-        self.upload_client.upload(
+        response = self.upload_client.upload(
             file_path=file_path,
             media_id=media_id,
             upload_data=query
         )
+        return response['mediaid']
