@@ -104,14 +104,25 @@ class AssetBankClient:
         )
 
     def upload_file(self, file_path: str, brand_id: str,
-                    media_id: str = '', query: dict = None):
-        """ Upload file."""
+                    media_id: str = '', query: dict = None) -> dict:
+        """ Upload file.
+            Params:
+                file_path: the local filepath of the file to upload.
+                brand_id: the brandid of the brand that belong the asset.
+                query: extra dict parameters of information to add to the
+                       asset. (See api documentation for more information)
+            Return a dict with the keys:
+                - success: boolean that indicate the result of the upload call.
+                - mediaitems: a list of mediaitems created, with at least the
+                    original.
+                - batchId: the batchId of the upload.
+                - mediaid: the mediaId update or created.
+        """
         if query is None:
             query = {}
         query['brandId'] = brand_id
-        response = self.upload_client.upload(
+        return self.upload_client.upload(
             file_path=file_path,
             media_id=media_id,
             upload_data=query
         )
-        return response['mediaid']
