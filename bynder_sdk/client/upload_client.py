@@ -126,7 +126,7 @@ class UploadClient():
             save_endpoint = '/api/v4/media/{}/save/{}/'.format(media_id, import_id)
             data = {}
 
-        save_success = self.bynder_request_handler.post(
+        return self.bynder_request_handler.post(
             endpoint=save_endpoint,
             payload=data
         )
