@@ -103,7 +103,7 @@ test_requires = [
     'pylint==1.7.0',
     'mypy==0.501',
     'pytest',
-    'pytest-cov==2.5.1',
+    'pytest-cov',
 ]
 
 setup(
