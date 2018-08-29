@@ -9,6 +9,4 @@ python:
 
 install: pip install -e .
 
-script:
-  - make lint
-  - make test
+script: make test
