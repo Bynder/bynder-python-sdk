@@ -6,8 +6,6 @@ python:
   - "3.5"
   - "3.6"
 
-before_install: pip install pytest-cov
-
 install: pip install -e .
 
 script: make test
