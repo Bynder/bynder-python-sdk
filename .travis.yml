@@ -11,3 +11,10 @@ before_install: pip install pytest-cov
 install: pip install -e .
 
 script: make test
+
+notifications:
+  email:
+    recipients:
+      - ajax@bynder.com
+    on_success: never
+    on_failure: always
