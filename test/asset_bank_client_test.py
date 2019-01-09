@@ -1,4 +1,3 @@
-import unittest
 from unittest import mock, TestCase
 from bynder_sdk import BynderClient
 
@@ -26,11 +25,9 @@ class AssetBankClientTest(TestCase):
         self.asset_bank_client.bynder_request_handler.delete = mock.MagicMock()
         self.asset_bank_client.upload_client.upload = mock.MagicMock()
 
-
     def tearDown(self):
         self.bynder_client = None
         self.asset_bank_client = None
-
 
     def test_brands(self):
         """ Test if when we call brands it will use the correct params for the
@@ -40,7 +37,6 @@ class AssetBankClientTest(TestCase):
         self.asset_bank_client.bynder_request_handler.get.assert_called_with(
             endpoint='/api/v4/brands/'
         )
-
 
     def test_tags(self):
         """ Test if when we call tags it will use the correct params for the
@@ -62,7 +58,6 @@ class AssetBankClientTest(TestCase):
             params=query
         )
 
-
     def test_meta_properties(self):
         """ Test if when we call meta_properties it will use the correct params for the
         request and returns successfully.
@@ -72,7 +67,6 @@ class AssetBankClientTest(TestCase):
             endpoint='/api/v4/metaproperties/',
             params={}
         )
-
 
     def test_media_list(self):
         """ Test if when we call media_list it will use the correct params for the
@@ -97,7 +91,6 @@ class AssetBankClientTest(TestCase):
             params=query
         )
 
-
     def test_media_info(self):
         """ Test if when we call media_info it will use the correct params for the
         request and returns successfully.
@@ -107,7 +100,6 @@ class AssetBankClientTest(TestCase):
             endpoint='/api/v4/media/1111/',
             params={}
         )
-
 
     def test_download_url(self):
         """ Test if when we call download_url it will use the correct params for the
@@ -119,10 +111,9 @@ class AssetBankClientTest(TestCase):
             params={}
         )
 
-
     def test_set_media_properties(self):
-        """ Test if when we call set_media_properties it will use the correct params for the
-        request and returns successfully.
+        """ Test if when we call set_media_properties it will use the
+        correct params for the request and returns successfully.
         """
         self.asset_bank_client.set_media_properties(media_id=1111)
         self.asset_bank_client.bynder_request_handler.post.assert_called_with(
@@ -130,16 +121,13 @@ class AssetBankClientTest(TestCase):
             payload={}
         )
 
-
     def test_delete_media(self):
         """ Test if when we call delete_media it will use the correct params for the
         request and returns successfully.
         """
         self.asset_bank_client.delete_media(media_id=1111)
-        self.asset_bank_client.bynder_request_handler.delete.assert_called_with(
-            endpoint='/api/v4/media/1111/'
-        )
-
+        self.asset_bank_client.bynder_request_handler\
+            .delete.assert_called_with(endpoint='/api/v4/media/1111/')
 
     def test_create_usage(self):
         """ Test if when we call create_usage it will use the correct params for the
@@ -158,7 +146,6 @@ class AssetBankClientTest(TestCase):
             payload=payload
         )
 
-
     def test_get_usage(self):
         """ Test if when we call get_usage it will use the correct params for the
         request and returns successfully.
@@ -167,7 +154,6 @@ class AssetBankClientTest(TestCase):
         self.asset_bank_client.bynder_request_handler.get.assert_called_with(
             endpoint='/api/media/usage/', params={}
         )
-
 
     def test_delete_usage(self):
         """ Test if when we call delete_usage it will use the correct params for the
@@ -181,11 +167,11 @@ class AssetBankClientTest(TestCase):
             integration_id=payload['integration_id'],
             asset_id=payload['asset_id']
         )
-        self.asset_bank_client.bynder_request_handler.delete.assert_called_with(
-            endpoint='/api/media/usage/',
-            params=payload
-        )
-
+        self.asset_bank_client.bynder_request_handler\
+            .delete.assert_called_with(
+                endpoint='/api/media/usage/',
+                params=payload
+            )
 
     def test_upload_file(self):
         """ Test if when we call upload_file it will use the correct params for the
@@ -193,7 +179,8 @@ class AssetBankClientTest(TestCase):
         """
         file_path = 'path_to_a_file.png'
         brand_id = 1111
-        self.asset_bank_client.upload_file(file_path=file_path, brand_id=brand_id)
+        self.asset_bank_client.upload_file(
+            file_path=file_path, brand_id=brand_id)
         self.asset_bank_client.upload_client.upload.assert_called_with(
             file_path=file_path,
             media_id='',

@@ -124,6 +124,35 @@ All the collection related calls.
     share_collection(collection_id, collection_option, recipients, query)
 ```
 
+#### pim_client:
+All the PIM related calls.
+```python
+    metaproperties()
+    metaproperty_info(metaproperty_id)
+    metaproperty_options(metaproperty_id)
+    edit_metaproperty_option(metaproperty_option_id, children)
+```
+
+#### workflow_client:
+All the workflow related calls.
+```python
+    users()
+    groups()
+    group_info(group_id)
+    metaproperties()
+    metaproperty_info(metaproperty_id)
+    campaigns(query)
+    campaign_info(campaign_id)
+    create_campaign(name, key, description, responsibleID, query)
+    edit_campaign(campaign_id, name, key, description, responsibleID, query)
+    delete_campaign(campaign_id)
+    job_preset_info(job_preset_id)
+    jobs(campaign_id)
+    create_job(name, campaignID, accountableID, presetID, query)
+    edit_job(job_id, name, campaignID, accountableID, presetID, query)
+    job_info(job_id)
+    delete_job(job_id)
+```
 
 ## Tests
 

@@ -1,4 +1,4 @@
-from urllib.parse import (urljoin, parse_qs)
+from urllib.parse import urljoin, parse_qs
 import requests
 from requests_oauthlib import OAuth1
 
@@ -37,7 +37,9 @@ class OauthRequestHandler:
         response.raise_for_status()
         return parse_qs(response.content.decode('UTF-8'))
 
-    def _generic_request(self, request_type, endpoint, payload: dict = None, params: dict = None):
+    # pylint: disable=too-many-arguments
+    def _generic_request(self, request_type, endpoint, payload: dict = None,
+                         params: dict = None, json: dict = None):
         """ Generic method used for Bynder requests
         """
         response = request_type(
@@ -45,6 +47,7 @@ class OauthRequestHandler:
             auth=self.oauth,
             params=params,
             data=payload,
+            json=json,
             verify=True
         )
         response.raise_for_status()
@@ -62,13 +65,24 @@ class OauthRequestHandler:
             params=params
         )
 
-    def post(self, endpoint, payload: dict = None):
+    def post(self, endpoint, payload: dict = None, json: dict = None):
         """ Send POST request to user portal.
         """
         return self._generic_request(
             request_type=requests.post,
             endpoint=endpoint,
-            payload=payload
+            payload=payload,
+            json=json
+        )
+
+    def put(self, endpoint, payload: dict = None, json: dict = None):
+        """ Send PUT request to user portal.
+        """
+        return self._generic_request(
+            request_type=requests.put,
+            endpoint=endpoint,
+            payload=payload,
+            json=json
         )
 
     def delete(self, endpoint, payload: dict = None, params: dict = None):

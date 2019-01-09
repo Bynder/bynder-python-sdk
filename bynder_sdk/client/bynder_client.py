@@ -1,18 +1,25 @@
 from urllib.parse import urljoin
-from bynder_sdk.oauth.oauth_request_handler import OauthRequestHandler
+
+from bynder_sdk.client.asset_bank_client import AssetBankClient
+from bynder_sdk.client.collection_client import CollectionClient
+from bynder_sdk.client.pim_client import PIMClient
+from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.model.credentials import Credentials
-from .asset_bank_client import AssetBankClient
-from .collection_client import CollectionClient
+from bynder_sdk.oauth.oauth_request_handler import OauthRequestHandler
 
 
 class BynderClient:
-    """ Client used to login to Bynder and to get an instance of the AssetBankClient.
+    """ Client used to login to Bynder and to get an instance
+    of the AssetBankClient.
     """
     # pylint: disable-msg=too-many-arguments
-    def __init__(self, base_url, consumer_key, consumer_secret, token=None, token_secret=None):
+    def __init__(self, base_url, consumer_key, consumer_secret,
+                 token=None, token_secret=None):
         self.base_url = base_url
         self._asset_bank_client = None
         self._collection_client = None
+        self._workflow_client = None
+        self._pim_client = None
         self.credentials = Credentials(
             consumer_key,
             consumer_secret,
@@ -26,10 +33,12 @@ class BynderClient:
 
     @property
     def asset_bank_client(self):
-        """ Gets an instance of the asset bank client to perform Bynder Asset Bank operations.
+        """ Gets an instance of the asset bank client to perform Bynder
+        Asset Bank operations.
         """
         if self._asset_bank_client is None:
-            self._asset_bank_client = AssetBankClient(self.bynder_request_handler)
+            self._asset_bank_client = AssetBankClient(
+                self.bynder_request_handler)
         return self._asset_bank_client
 
     @property
@@ -37,12 +46,29 @@ class BynderClient:
         """ Gets an instance of the collection client to perform collection operations.
         """
         if self._collection_client is None:
-            self._collection_client = CollectionClient(self.bynder_request_handler)
+            self._collection_client = CollectionClient(
+                self.bynder_request_handler)
         return self._collection_client
 
+    @property
+    def workflow_client(self):
+        """ Gets an instance of the workflow client to perform workflow operations.
+        """
+        if self._workflow_client is None:
+            self._workflow_client = WorkflowClient(self.bynder_request_handler)
+        return self._workflow_client
+
+    @property
+    def pim_client(self):
+        """ Gets an instance of the PIM client to perform PIM operations.
+        """
+        if self._pim_client is None:
+            self._pim_client = PIMClient(self.bynder_request_handler)
+        return self._pim_client
+
     def login(self, username, password):
-        """ Login using API. To be able to use this method we need to provide an request token
-        key/secret with login permissions in settings.ini.
+        """ Login using API. To be able to use this method we need to provide a
+        request token key/secret with login permissions in settings.ini.
         """
         query = {
             'username': username,
@@ -59,8 +85,8 @@ class BynderClient:
         return login_response
 
     def request_token(self):
-        """ Gets temporary request token pair used to build the authorise URL and login through
-        the browser.
+        """ Gets temporary request token pair used to build the authorise URL and
+        log in through the browser.
         """
         if self.credentials.token or self.credentials.token_secret:
             self.credentials.clear()
@@ -78,18 +104,19 @@ class BynderClient:
     def authorise_url(self, callback_url: str = ''):
         """ Some very valuable information.
         """
-        authorise_url_endpoint = '/api/v4/oauth/authorise/?oauth_token={0}'.format(
-            self.credentials.token
-        )
+        authorise_url_endpoint = (
+            '/api/v4/oauth/authorise/?oauth_token={0}'
+        ).format(self.credentials.token)
 
         if callback_url:
-            authorise_url_endpoint = '{0}&callback={1}'.format(authorise_url_endpoint, callback_url)
+            authorise_url_endpoint = '{0}&callback={1}'.format(
+                authorise_url_endpoint, callback_url)
 
         return urljoin(self.base_url, authorise_url_endpoint)
 
     def access_token(self):
-        """ Gets temporary access token pair once the user has already accessed the authorise
-        URL and logged in through the browser.
+        """ Gets temporary access token pair once the user has already
+        accessed the authorise URL and logged in through the browser.
         """
         access_token_response = self.bynder_request_handler.fetch_token(
             endpoint='/api/v4/oauth/access_token/'
@@ -102,9 +129,9 @@ class BynderClient:
         return updated_access_tokens
 
     def logout(self):
-        """ Logout resets your credentials. If the access token key/secret provided in the
-        settings have full permission, even after this call, calls to any API endpoint will
-        still work.
+        """ Logout resets your credentials. If the access token key/secret
+        provided in the settings have full permission, even after this call,
+        calls to any API endpoint will still work.
         """
         self.credentials.reset()
         self._update_bynder_request_handler_credentials()

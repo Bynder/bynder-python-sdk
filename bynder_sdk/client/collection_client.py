@@ -75,9 +75,10 @@ class CollectionClient:
         """
         collection_options = ['view', 'edit']
         if collection_option not in collection_options:
-            raise ValueError("Invalid collection_option. Expected one of: {0}".format(
-                collection_options
-            ))
+            raise ValueError(
+                'Invalid collection_option. Expected one of: {0}'.format(
+                    collection_options)
+            )
         if query is None:
             query = {}
         query['collectionOptions'] = collection_option

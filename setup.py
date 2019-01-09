@@ -1,9 +1,10 @@
 import logging
-import subprocess
 import re
+import subprocess
+import sys
 from distutils.core import Command
-from setuptools import setup, find_packages
 
+from setuptools import find_packages, setup
 
 with open("VERSION") as fh:
     __version__ = fh.read().strip()
@@ -18,8 +19,12 @@ log.setLevel(logging.INFO)
 
 def _run_linters():
     linters = {
-        'pylint': ['pylint', '--output-format', 'parseable']
+        'flake8': ['flake8']
     }
+
+    if sys.version_info >= (3,5,3):
+        # https://github.com/PyCQA/pylint/issues/1388
+        linters.update({'pylint': ['pylint', '--output-format', 'parseable']})
 
     for linter_name, command in linters.items():
         log.info('Running %s', linter_name)
@@ -38,13 +43,14 @@ def _run_type_linting():
 
 
 def _run_tests():
-    import pytest
-    errno = pytest.main(['--cov-report', 'term-missing:skip-covered',
-                         '--cov-report', 'xml',
-                         '--cov', 'bynder_sdk',
-                         '--cov', 'test',
-                         'test'])
-    raise SystemExit(errno)
+    if subprocess.call(
+            ['pytest',
+             '--cov-report', 'term-missing:skip-covered',
+             '--cov-report', 'xml',
+             '--cov', 'bynder_sdk',
+             '--cov', 'test',
+             'test']):
+        raise SystemExit('Linting failed.')
 
 
 def _run_listdeps():
@@ -57,7 +63,20 @@ class PyTest(Command):
     user_options = []
 
     def initialize_options(self):
-        subprocess.call(['pip', 'install'] + test_requires)
+        subprocess.call(['pip', 'install'] + requires + test_requires)
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        _run_tests()
+
+
+class Linting(Command):
+    user_options = []
+
+    def initialize_options(self):
+        subprocess.call(['pip', 'install'] + requires + test_requires)
 
     def finalize_options(self):
         pass
@@ -65,7 +84,6 @@ class PyTest(Command):
     def run(self):
         _run_linters()
         _run_type_linting()
-        _run_tests()
 
 
 class ListDeps(Command):
@@ -95,7 +113,7 @@ class TestDeps(Command):
 
 
 requires = [
-        'requests==2.18.4',
+        'requests>=2.20.0, <=3.0.0',
         'requests_oauthlib==0.8.0',
 ]
 
@@ -104,7 +122,15 @@ test_requires = [
     'mypy==0.501',
     'pytest',
     'pytest-cov',
+    'flake8',
 ]
+
+commands = {
+    'test': PyTest,
+    'lint': Linting,
+    'listdeps': ListDeps,
+    'testdeps': TestDeps,
+}
 
 setup(
     name='bynder-sdk',
@@ -118,7 +144,7 @@ setup(
     author='Bynder',
     author_email='techteam@bynder.com',
     license='MIT',
-    cmdclass={'test': PyTest, 'listdeps': ListDeps, 'testdeps': TestDeps},
+    cmdclass=commands,
     packages=find_packages(),
     install_requires=requires,
     tests_require=test_requires,

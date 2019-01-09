@@ -1,20 +1,23 @@
 DISTNAME= $(shell python setup.py --name | sed 's/-/_/g' )
 
 .PHONY: test
-test:
+test: lint unittest
+
+.PHONY: unittest
+unittest:
 	@rm -f coverage.xml cobertura.xml
 	python setup.py test
+
+.PHONY: lint
+lint: clean
+	@echo ">> Linting"
+	python setup.py lint
 
 .PHONY: clean
 clean:
 	@echo ">> Cleaning"
 	@find . -name \.AppleDouble -exec rm -rf {} +
 	@rm -rf build dist
-
-.PHONY: lint
-lint: clean
-	@echo ">> Linting"
-	@pylint --output-format=parseable --rcfile=pylintrc $(DISTNAME) test
 
 .PHONY: dist
 dist: clean

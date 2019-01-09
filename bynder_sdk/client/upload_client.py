@@ -1,4 +1,3 @@
-from urllib.parse import urljoin
 import os
 import time
 
@@ -24,7 +23,8 @@ class UploadClient():
         """
         init_data, total_parts = self._run_s3_upload(file_path)
         finalise_data = self._finalise_file(init_data, total_parts)
-        return self._save_media(finalise_data['importId'], upload_data, media_id)
+        return self._save_media(finalise_data['importId'],
+                                upload_data, media_id)
 
     @staticmethod
     def _update_multipart(filename, total_parts, init_data, part_nr):
@@ -44,13 +44,15 @@ class UploadClient():
         init_data = self._init_upload(filename)
         with open(file_path, 'rb') as f:
             part_nr = 0
-            total_parts = (os.fstat(f.fileno()).st_size + MAX_CHUNK_SIZE - 1) // MAX_CHUNK_SIZE
+            total_parts = (os.fstat(f.fileno()).st_size + MAX_CHUNK_SIZE - 1)\
+                // MAX_CHUNK_SIZE
 
             part_bytes = f.read(MAX_CHUNK_SIZE)
             while part_bytes:
                 part_nr = part_nr + 1
                 init_data = self._update_init_data(init_data, part_nr)
-                init_data = self._update_multipart(filename, total_parts, init_data, part_nr)
+                init_data = self._update_multipart(filename, total_parts,
+                                                   init_data, part_nr)
                 self.bynder_request_handler.post_file(
                     upload_url=self.upload_url,
                     files={"file": part_bytes},
@@ -61,9 +63,10 @@ class UploadClient():
         return init_data, total_parts
 
     def _init_upload(self, filename):
-        """ Gets the URL of the Amazon S3 bucket-endpoint in the region closest to the server
-        and initialises a file upload with Bynder and returns authorisation information to allow
-        uploading to the Amazon S3 bucket-endpoint.
+        """ Gets the URL of the Amazon S3 bucket-endpoint in the region
+        closest to the server and initialises a file upload with Bynder
+        and returns authorisation information to allow uploading to the
+        Amazon S3 bucket-endpoint.
         """
         self.upload_url = self.bynder_request_handler.get(
             endpoint='/api/upload/endpoint/'
@@ -104,7 +107,8 @@ class UploadClient():
         """ Finalises a completely uploaded file.
         """
         return self.bynder_request_handler.post(
-            endpoint='/api/v4/upload/{0}/'.format(init_data['s3file']['uploadid']),
+            endpoint='/api/v4/upload/{0}/'.format(
+                init_data['s3file']['uploadid']),
             payload={
                 'id': init_data['s3file']['uploadid'],
                 'targetid': init_data['s3file']['targetid'],
@@ -114,8 +118,9 @@ class UploadClient():
         )
 
     def _save_media(self, import_id, data, media_id=None):
-        """ Saves a new media asset in Bynder. If media id is specified in the query
-        a new version of the asset will be saved. Otherwise a new asset will be saved.
+        """ Saves a new media asset in Bynder. If media id is specified
+        in the query a new version of the asset will be saved. Otherwise
+        a new asset will be saved.
         """
         poll_status = self._poll_status(import_id)
         if import_id not in poll_status['itemsDone']:
@@ -123,7 +128,8 @@ class UploadClient():
 
         save_endpoint = '/api/v4/media/save/{}/'.format(import_id)
         if media_id:
-            save_endpoint = '/api/v4/media/{}/save/{}/'.format(media_id, import_id)
+            save_endpoint = '/api/v4/media/{}/save/{}/'.format(
+                media_id, import_id)
             data = {}
 
         return self.bynder_request_handler.post(

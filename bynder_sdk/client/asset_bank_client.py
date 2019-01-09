@@ -1,4 +1,4 @@
-from .upload_client import UploadClient
+from bynder_sdk.client.upload_client import UploadClient
 
 
 class AssetBankClient:

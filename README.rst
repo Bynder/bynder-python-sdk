@@ -164,6 +164,41 @@ All the collection related calls.
         remove_media_from_collection(collection_id, meedia_ids)
         share_collection(collection_id, collection_option, recipients, query)
 
+pim\_client:
+^^^^^^^^^^^^
+
+All the PIM related calls.
+
+.. code:: python
+
+    metaproperties()
+    metaproperty_info(metaproperty_id)
+    metaproperty_options(metaproperty_id)
+    edit_metaproperty_option(metaproperty_option_id, children)
+
+workflow\_client:
+^^^^^^^^^^^^^^^^^
+
+All the workflow related calls.
+
+.. code:: python
+        users()
+        groups()
+        group_info(group_id)
+        metaproperties()
+        metaproperty_info(metaproperty_id)
+        campaigns(query)
+        campaign_info(campaign_id)
+        create_campaign(name, key, description, responsibleID, query)
+        edit_campaign(campaign_id, name, key, description, responsibleID, query)
+        delete_campaign(campaign_id)
+        job_preset_info(job_preset_info)
+        jobs(campaign_id)
+        create_job(name, campaignID, accountableID, presetID, query)
+        edit_job(job_id, name, campaignID, accauntableID, presetID, query)
+        job_info(job_id)
+        delete_job(job_id)
+
 Tests
 -----
 
