@@ -118,7 +118,7 @@ requires = [
 ]
 
 test_requires = [
-    'pylint==1.7.0',
+    'pylint==2.2.2',
     'mypy==0.501',
     'pytest',
     'pytest-cov',
