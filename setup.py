@@ -9,7 +9,7 @@ from setuptools import find_packages, setup
 with open("VERSION") as fh:
     __version__ = fh.read().strip()
 
-with open("README.rst", 'r') as readme:
+with open("README.md", 'r') as readme:
     LONG_DESC = readme.read()
 
 build_version = __version__
@@ -22,7 +22,7 @@ def _run_linters():
         'flake8': ['flake8']
     }
 
-    if sys.version_info >= (3,5,3):
+    if sys.version_info >= (3, 5, 3):
         # https://github.com/PyCQA/pylint/issues/1388
         linters.update({'pylint': ['pylint', '--output-format', 'parseable']})
 
@@ -113,13 +113,13 @@ class TestDeps(Command):
 
 
 requires = [
-        'requests>=2.20.0, <=3.0.0',
-        'requests_oauthlib==0.8.0',
+        'requests>=2.20.0,<=3.0.0',
+        'requests_oauthlib>=1.1.0,<=2.0.0',
 ]
 
 test_requires = [
-    'pylint==2.2.2',
-    'mypy==0.501',
+    'pylint',
+    'mypy',
     'pytest',
     'pytest-cov',
     'flake8',
@@ -140,6 +140,7 @@ setup(
         ' integration of Bynder in Python'
     ),
     long_description=LONG_DESC,
+    long_description_content_type='text/markdown',
     url='https://bynder.com',
     author='Bynder',
     author_email='techteam@bynder.com',

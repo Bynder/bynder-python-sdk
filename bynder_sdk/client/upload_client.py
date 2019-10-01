@@ -11,8 +11,8 @@ POLLING_IDLE_TIME = 10
 class UploadClient():
     """ Client to upload asset to Bynder.
     """
-    def __init__(self, bynder_request_handler):
-        self.bynder_request_handler = bynder_request_handler
+    def __init__(self, oauth2_session):
+        self.oauth2_session = oauth2_session
 
     @staticmethod
     def _retrieve_filename(file_path):
@@ -53,11 +53,13 @@ class UploadClient():
                 init_data = self._update_init_data(init_data, part_nr)
                 init_data = self._update_multipart(filename, total_parts,
                                                    init_data, part_nr)
-                self.bynder_request_handler.post_file(
-                    upload_url=self.upload_url,
+                response = self.oauth2_session.post(
+                    self.upload_url,
                     files={"file": part_bytes},
-                    payload=init_data['multipart_params']
+                    data=init_data['multipart_params'],
+                    withhold_token=True,
                 )
+                response.raise_for_status()
                 self._register_part(init_data, part_nr)
                 part_bytes = f.read(MAX_CHUNK_SIZE)
         return init_data, total_parts
@@ -68,14 +70,14 @@ class UploadClient():
         and returns authorisation information to allow uploading to the
         Amazon S3 bucket-endpoint.
         """
-        self.upload_url = self.bynder_request_handler.get(
-            endpoint='/api/upload/endpoint/'
+        self.upload_url = self.oauth2_session.get(
+            endpoint='/upload/endpoint/'
         )
 
         payload = {'filename': filename}
-        return self.bynder_request_handler.post(
-            endpoint='/api/upload/init/',
-            payload=payload
+        return self.oauth2_session.post(
+            endpoint='/upload/init/',
+            data=payload
         )
 
     @staticmethod
@@ -93,9 +95,9 @@ class UploadClient():
     def _register_part(self, init_data, part_nr):
         """ Registers an uploaded chunk in Bynder.
         """
-        self.bynder_request_handler.post(
-            endpoint='/api/v4/upload/',
-            payload={
+        self.oauth2_session.post(
+            endpoint='/v4/upload/',
+            data={
                 'id': init_data['s3file']['uploadid'],
                 'targetid': init_data['s3file']['targetid'],
                 'filename': init_data['s3_filename'],
@@ -106,10 +108,10 @@ class UploadClient():
     def _finalise_file(self, init_data, total_parts):
         """ Finalises a completely uploaded file.
         """
-        return self.bynder_request_handler.post(
-            endpoint='/api/v4/upload/{0}/'.format(
+        return self.oauth2_session.post(
+            endpoint='/v4/upload/{0}/'.format(
                 init_data['s3file']['uploadid']),
-            payload={
+            data={
                 'id': init_data['s3file']['uploadid'],
                 'targetid': init_data['s3file']['targetid'],
                 's3_filename': init_data['s3_filename'],
@@ -126,23 +128,23 @@ class UploadClient():
         if import_id not in poll_status['itemsDone']:
             raise Exception("Converting media failed")
 
-        save_endpoint = '/api/v4/media/save/{}/'.format(import_id)
+        save_endpoint = '/v4/media/save/{}/'.format(import_id)
         if media_id:
-            save_endpoint = '/api/v4/media/{}/save/{}/'.format(
+            save_endpoint = '/v4/media/{}/save/{}/'.format(
                 media_id, import_id)
             data = {}
 
-        return self.bynder_request_handler.post(
+        return self.oauth2_session.post(
             endpoint=save_endpoint,
-            payload=data
+            data=data
         )
 
     def _poll_status(self, import_id):
         """ Gets poll processing status of finalised files.
         """
         for _ in range(MAX_POLLING_ITERATIONS):
-            status_dict = self.bynder_request_handler.get(
-                endpoint='/api/v4/upload/poll/',
+            status_dict = self.oauth2_session.get(
+                endpoint='/v4/upload/poll/',
                 params={'items': [import_id]}
             )
 

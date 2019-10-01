@@ -1,46 +1,48 @@
-import configparser
-import time
-import webbrowser
+import pprint
 
 from bynder_sdk import BynderClient
 
-# Get your tokens from .ini file
-config = configparser.ConfigParser()
-config.read('settings.ini')
+pp = pprint.PrettyPrinter()
 
-HAS_TOKENS = False
+token = None
+""" If we already have a token, it can be passed to the BynderClient
+initialization.
 
-# Create the BynderClient with your tokens
+    token = {
+        'access_token': '...',
+        'expires_at': 123456789,
+        'expires_in': 3599,
+        'id_token': '...',
+        'refresh_token': '...',
+        'scope': ['openid', 'offline'],
+        'token_type': 'bearer'
+    }
+"""
+
+
+def token_saver(token):
+    """ This function will be called by oauthlib-requests when a new
+    token is retrieved, either after the initial login or refreshing an
+    existing token. """
+    print('New token received:')
+    pp.pprint(token)
+
+
 bynder_client = BynderClient(
-    base_url=config.get('api', 'url'),
-    consumer_key=config.get('oauth', 'consumer_key'),
-    consumer_secret=config.get('oauth', 'consumer_secret'),
-    token=config.get('oauth', 'token'),
-    token_secret=config.get('oauth', 'token_secret')
+    domain='portal.getbynder.com',
+    redirect_uri='https://...',
+    client_id='',
+    client_secret='',
+    scopes=['openid', 'offline', 'asset:read', 'meta.assetbank:read'],
+    token=token,  # optional, if we already have one
+    token_saver=token_saver,  # optional, defaults to empty lambda
 )
 
-# Generate tokens if you don't have them
-if not HAS_TOKENS:
-    # Generate request token
-    bynder_client.request_token()
+if token is None:
+    pp.pprint(bynder_client.get_authorization_url())
 
-    # Get the authorise url
-    authorise_url = bynder_client.authorise_url()
-    print(authorise_url)
-    webbrowser.open_new_tab(authorise_url)
-
-    # Sleep for a while to give you time to login using the authorise url
-    time.sleep(20)
-
-    # Now get the access tokens
-    bynder_client.access_token()
-
-    # Or use the login method (deprecated)
-    # login = bynder_client.login(
-    #     username='your_username',
-    #     password='your_password'
-    # )
-    # print(login)
+    code = input('Code: ')
+    pp.pprint(bynder_client.fetch_token(code))
 
 
 # Get the asset bank client
@@ -59,32 +61,32 @@ workflow_client = bynder_client.workflow_client
 pim_client = bynder_client.pim_client
 
 
-# Get brands
+print('\n> Get brands:')
 brands = asset_bank_client.brands()
-print(brands)
+pp.pprint(brands)
 
 
-# Get tags
+print('\n> Get tags:')
 tags = asset_bank_client.tags()
-print(tags)
+pp.pprint(tags)
 
 
-# Get meta properties
+print('\n> Get metaproperties:')
 meta_properties = asset_bank_client.meta_properties()
-print(meta_properties)
+pp.pprint(meta_properties)
 
 
-# Get media list
+print('\n> Get media list:')
 media_list = asset_bank_client.media_list({
     'count': True,
     'limit': 2,
     'type': 'image',
     'versions': 1
 })
-print(media_list)
+pp.pprint(media_list)
 
 
-# Get media info
+print('\n> Get media info:')
 media_id = media_list.get('media')[0].get('id')
 media_info = asset_bank_client.media_info(
     media_id=media_id,
@@ -92,57 +94,57 @@ media_info = asset_bank_client.media_info(
         'versions': 1
     }
 )
-print(media_info)
+pp.pprint(media_info)
 
 
-# Get download url
+print('\n> Get download url:')
 download_url = asset_bank_client.media_download_url(
     media_id=media_id
 )
-print(download_url)
+pp.pprint(download_url)
 
 
-# Get collections list
+print('\n> Get collections list:')
 collections = collection_client.collections()
-print(collections)
+pp.pprint(collections)
 
 
-# Get media ids of a collection
+print('\n> Get media ids of a collection:')
 collection_id = collections[0]['id']
 collection_media_ids = collection_client.collection_media_ids(
     collection_id=collection_id
 )
-print(collection_media_ids)
+pp.pprint(collection_media_ids)
 
 
-# Get workflow users
+print('\n> Get workflow users:')
 workflow_users = workflow_client.users()
 workflow_user = workflow_users[0]['ID']
-print(workflow_users)
+pp.pprint(workflow_users)
 
 
-# Create new campaign
+print('\n> Create new campaign:')
 new_campaign = workflow_client.create_campaign(
     name='compaign_name',
     key='CKEY',
     description='campaign_description',
     responsible_id=workflow_user
 )
-print(new_campaign)
+pp.pprint(new_campaign)
 
 
-# Get campaigns list
+print('\n> Get campaigns list:')
 campaigns = workflow_client.campaigns()
-print(campaigns)
+pp.pprint(campaigns)
 
 
-# Get campaign info
+print('\n> Get campaigns info:')
 campaign_id = campaigns[0]['ID']
 campaign_info = workflow_client.campaign_info(campaign_id)
-print(campaign_info)
+pp.pprint(campaign_info)
 
 
-# Edit a campaign
+print('\n> Edit a campaign:')
 edited_campaign = workflow_client.edit_campaign(
     campaign_id=new_campaign['id'],
     name='new_compaign_name',
@@ -150,92 +152,92 @@ edited_campaign = workflow_client.edit_campaign(
     description='new_compaign_description',
     responsible_id=workflow_user
 )
-print(edited_campaign)
+pp.pprint(edited_campaign)
 
 
-# Delete campaign
+print('\n> Delete campaign:')
 workflow_client.delete_campaign(
     campaign_id=new_campaign['id']
 )
 
 
-# Get list of PIM metaproperties
+print('\n> Get list of PIM metaproperties:')
 pim_metaproperties = pim_client.metaproperties()
 pim_metaproperty_id = pim_metaproperties[0]
-print(pim_metaproperties)
+pp.pprint(pim_metaproperties)
 
 
-# Get metaproperty info
+print('\n> Get metaproperty info:')
 pim_metaproperty = pim_client.metaproperty_info(
     metaproperty_id=pim_metaproperty_id
 )
-print(pim_metaproperty_id)
+pp.pprint(pim_metaproperty_id)
 
 
-# Get list of PIM metapropery options
+print('\n> Get list of PIM metaproperty options:')
 pim_metaproperty_options = pim_client.metaproperty_options(
     metaproperty_id=pim_metaproperty_id
 )
 pim_metaproperty_option_id = pim_metaproperty_options[0]['id']
-print(pim_metaproperty_options)
+pp.pprint(pim_metaproperty_options)
 
 
-# Get workflow metaproperties list
+print('\n> Get workflow metaproperties list:')
 workflow_metaproperties = workflow_client.metaproperties()
 workflow_metaproperty_id = workflow_metaproperties[0]['ID']
-print(workflow_metaproperties)
+pp.pprint(workflow_metaproperties)
 
 
-# Get workflow metaproperty info
+print('\n> Get workflow metaproperty info:')
 workflow_metaproperty = workflow_client.metaproperty_info(
     metaproperty_id=workflow_metaproperty_id)
-print(workflow_metaproperty)
+pp.pprint(workflow_metaproperty)
 
 
-# Get workflow groups list
+print('\n> Get workflow groups list:')
 workflow_groups = workflow_client.groups()
 workflow_group_id = workflow_groups[0]['ID']
-print(workflow_groups)
+pp.pprint(workflow_groups)
 
 
-# Get workflow group info
+print('\n> Get workflow group info:')
 workflow_group = workflow_client.group_info(
     group_id=workflow_group_id
 )
-print(workflow_group)
+pp.pprint(workflow_group)
 
 
-# Get jobs
+print('\n> Get jobs:')
 jobs = workflow_client.jobs()
 job_id = jobs[0]['id']
-print(jobs)
+pp.pprint(jobs)
 
 
-# Get jobs by campaign
+print('\n> Get jobs by campaign:')
 jobs_by_campaign = workflow_client.jobs(
     campaign_id=campaign_id
 )
-print(jobs_by_campaign)
+pp.pprint(jobs_by_campaign)
 
 
-# Get specific job
+print('\n> Get specific job:')
 job_info = workflow_client.job_info(
     job_id=job_id
 )
-print(job_info)
+pp.pprint(job_info)
 
 
-# Create new job
+print('\n> Create new job:')
 new_job = workflow_client.create_job(
     name='new_job_name',
     campaign_id=job_info['campaignID'],
     accountable_id=job_info['accountableID'],
     preset_id=job_info['presetID']
 )
-print(new_job)
+pp.pprint(new_job)
 
 
-# Edit job
+print('\n> Edit job:')
 edited_job = workflow_client.edit_job(
     job_id,
     name='edited_job_name',
@@ -243,17 +245,26 @@ edited_job = workflow_client.edit_job(
     accountable_id=job_info['accountableID'],
     preset_id=job_info['presetID']
 )
-print(edited_job)
+pp.pprint(edited_job)
 
 
-# Delete job
+print('\n> Delete job:')
 workflow_client.delete_job(
     job_id=job_id
 )
 
 
-# Get job preset info
+print('\n> Get job preset info:')
 job_preset_info = workflow_client.job_preset_info(
     job_preset_id=job_info['presetID']
 )
-print(job_preset_info)
+pp.pprint(job_preset_info)
+
+
+print('\n> Upload a file to the asset bank')
+uploaded_file = asset_bank_client.upload_file(
+    file_path='example/image.png',
+    brand_id=brands[0]['id']
+)
+
+pp.pprint(uploaded_file)
