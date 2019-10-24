@@ -10,15 +10,13 @@ class BynderClient:
     getting the clients for various Bynder modules.
     """
 
-    DEFAULT_SCOPES = ['openid', 'offline']
-
     # pylint: disable-msg=too-many-arguments
     def __init__(self, domain, client_id, client_secret, redirect_uri,
-                 token=None, token_saver=None, scopes=None):
+                 scopes, token=None, token_saver=None):
         self.oauth2_session = BynderOAuth2Session(
             domain,
             client_id,
-            scope=scopes or BynderClient.DEFAULT_SCOPES,
+            scope=scopes,
             redirect_uri=redirect_uri,
             auto_refresh_kwargs={
                 'client_id': client_id,
