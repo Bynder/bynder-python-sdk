@@ -14,7 +14,7 @@ initialization.
         'expires_in': 3599,
         'id_token': '...',
         'refresh_token': '...',
-        'scope': ['openid', 'offline'],
+        'scope': ['offline'],
         'token_type': 'bearer'
     }
 """
@@ -33,7 +33,7 @@ bynder_client = BynderClient(
     redirect_uri='https://...',
     client_id='',
     client_secret='',
-    scopes=['openid', 'offline', 'asset:read', 'meta.assetbank:read'],
+    scopes=['offline', 'asset:read', 'meta.assetbank:read'],
     token=token,  # optional, if we already have one
     token_saver=token_saver,  # optional, defaults to empty lambda
 )

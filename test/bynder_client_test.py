@@ -15,7 +15,8 @@ class BynderClientTest(TestCase):
             redirect_uri='https://test.com/',
             client_id='client_id',
             client_secret='client_secret',
-            token=TOKEN
+            token=TOKEN,
+            scopes='offline'
         )
 
     def test_create_bynder_client(self):
