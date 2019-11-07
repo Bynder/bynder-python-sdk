@@ -11,8 +11,8 @@ POLLING_IDLE_TIME = 10
 class UploadClient():
     """ Client to upload asset to Bynder.
     """
-    def __init__(self, oauth2_session):
-        self.oauth2_session = oauth2_session
+    def __init__(self, session):
+        self.session = session
 
     @staticmethod
     def _retrieve_filename(file_path):
@@ -53,7 +53,7 @@ class UploadClient():
                 init_data = self._update_init_data(init_data, part_nr)
                 init_data = self._update_multipart(filename, total_parts,
                                                    init_data, part_nr)
-                response = self.oauth2_session.post(
+                response = self.session.post(
                     self.upload_url,
                     files={"file": part_bytes},
                     data=init_data['multipart_params'],
@@ -70,13 +70,11 @@ class UploadClient():
         and returns authorisation information to allow uploading to the
         Amazon S3 bucket-endpoint.
         """
-        self.upload_url = self.oauth2_session.get(
-            endpoint='/upload/endpoint/'
-        )
+        self.upload_url = self.session.get('/upload/endpoint/')
 
         payload = {'filename': filename}
-        return self.oauth2_session.post(
-            endpoint='/upload/init/',
+        return self.session.post(
+            '/upload/init/',
             data=payload
         )
 
@@ -95,8 +93,8 @@ class UploadClient():
     def _register_part(self, init_data, part_nr):
         """ Registers an uploaded chunk in Bynder.
         """
-        self.oauth2_session.post(
-            endpoint='/v4/upload/',
+        self.session.post(
+            '/v4/upload/',
             data={
                 'id': init_data['s3file']['uploadid'],
                 'targetid': init_data['s3file']['targetid'],
@@ -108,8 +106,8 @@ class UploadClient():
     def _finalise_file(self, init_data, total_parts):
         """ Finalises a completely uploaded file.
         """
-        return self.oauth2_session.post(
-            endpoint='/v4/upload/{0}/'.format(
+        return self.session.post(
+            '/v4/upload/{0}/'.format(
                 init_data['s3file']['uploadid']),
             data={
                 'id': init_data['s3file']['uploadid'],
@@ -134,8 +132,8 @@ class UploadClient():
                 media_id, import_id)
             data = {}
 
-        return self.oauth2_session.post(
-            endpoint=save_endpoint,
+        return self.session.post(
+            save_endpoint,
             data=data
         )
 
@@ -143,8 +141,8 @@ class UploadClient():
         """ Gets poll processing status of finalised files.
         """
         for _ in range(MAX_POLLING_ITERATIONS):
-            status_dict = self.oauth2_session.get(
-                endpoint='/v4/upload/poll/',
+            status_dict = self.session.get(
+                '/v4/upload/poll/',
                 params={'items': [import_id]}
             )
 

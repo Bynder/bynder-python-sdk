@@ -4,6 +4,15 @@ from bynder_sdk import BynderClient
 
 pp = pprint.PrettyPrinter()
 
+# When using Permanent Tokens
+
+bynder_client = BynderClient(
+    domain='portal.getbynder.com',
+    permanent_token=''
+)
+
+# When using OAuth2
+
 token = None
 """ If we already have a token, it can be passed to the BynderClient
 initialization.
@@ -30,7 +39,7 @@ def token_saver(token):
 
 bynder_client = BynderClient(
     domain='portal.getbynder.com',
-    redirect_uri='https://...',
+    redirect_uri='',
     client_id='',
     client_secret='',
     scopes=['offline', 'asset:read', 'meta.assetbank:read'],
@@ -44,6 +53,7 @@ if token is None:
     code = input('Code: ')
     pp.pprint(bynder_client.fetch_token(code))
 
+# Example calls
 
 # Get the asset bank client
 asset_bank_client = bynder_client.asset_bank_client

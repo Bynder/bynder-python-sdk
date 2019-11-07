@@ -1,8 +1,14 @@
+
 from bynder_sdk.client.asset_bank_client import AssetBankClient
 from bynder_sdk.client.collection_client import CollectionClient
 from bynder_sdk.client.pim_client import PIMClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
+from bynder_sdk.permanent_token import BynderAPISession
+
+
+REQUIRED_OAUTH_KWARGS = (
+    'client_id', 'client_secret', 'redirect_uri', 'scopes')
 
 
 class BynderClient:
@@ -11,33 +17,45 @@ class BynderClient:
     """
 
     # pylint: disable-msg=too-many-arguments
-    def __init__(self, domain, client_id, client_secret, redirect_uri,
-                 scopes, token=None, token_saver=None):
-        self.oauth2_session = BynderOAuth2Session(
-            domain,
-            client_id,
-            scope=scopes,
-            redirect_uri=redirect_uri,
-            auto_refresh_kwargs={
-                'client_id': client_id,
-                'client_secret': client_secret
-            },
-            token_updater=token_saver or (lambda _: None)
-        )
+    def __init__(self, domain, **kwargs):
+        if 'permanent_token' in kwargs:
+            self.session = BynderAPISession(
+                domain, kwargs['permanent_token'])
+        else:
+            missing = [
+                kw for kw in REQUIRED_OAUTH_KWARGS
+                if kwargs.get(kw) is None
+            ]
+            if missing:
+                raise TypeError(
+                    'Missing required arguments: {}'.format(missing)
+                )
 
-        if token is not None:
-            self.oauth2_session.token = token
+            self.session = BynderOAuth2Session(
+                domain,
+                kwargs['client_id'],
+                scope=kwargs['scopes'],
+                redirect_uri=kwargs['redirect_uri'],
+                auto_refresh_kwargs={
+                    'client_id': kwargs['client_id'],
+                    'client_secret': kwargs['client_secret']
+                },
+                token_updater=kwargs.get('token_saver', (lambda _: None))
+            )
 
-        self.asset_bank_client = AssetBankClient(self.oauth2_session)
-        self.collection_client = CollectionClient(self.oauth2_session)
-        self.pim_client = PIMClient(self.oauth2_session)
-        self.workflow_client = WorkflowClient(self.oauth2_session)
+            if kwargs.get('token') is not None:
+                self.session.token = kwargs['token']
+
+        self.asset_bank_client = AssetBankClient(self.session)
+        self.collection_client = CollectionClient(self.session)
+        self.pim_client = PIMClient(self.session)
+        self.workflow_client = WorkflowClient(self.session)
 
     def get_authorization_url(self):
-        return self.oauth2_session.authorization_url()
+        return self.session.authorization_url()
 
     def fetch_token(self, code, *args, **kwargs):
-        return self.oauth2_session.fetch_token(
+        return self.session.fetch_token(
             code=code,
             *args,
             **kwargs
@@ -46,4 +64,4 @@ class BynderClient:
     def derivatives(self):
         """ Gets the list of the derivatives configured for the current account.
         """
-        return self.oauth2_session.get('/v4/account/derivatives/')
+        return self.session.get('/v4/account/derivatives/')

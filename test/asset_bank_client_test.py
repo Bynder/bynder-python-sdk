@@ -10,9 +10,9 @@ class AssetBankClientTest(TestCase):
         self.bynder_client = create_bynder_client()
 
         self.asset_bank_client = self.bynder_client.asset_bank_client
-        self.asset_bank_client.oauth2_session.get = mock.MagicMock()
-        self.asset_bank_client.oauth2_session.post = mock.MagicMock()
-        self.asset_bank_client.oauth2_session.delete = mock.MagicMock()
+        self.asset_bank_client.session.get = mock.MagicMock()
+        self.asset_bank_client.session.post = mock.MagicMock()
+        self.asset_bank_client.session.delete = mock.MagicMock()
         self.asset_bank_client.upload_client.upload = mock.MagicMock()
 
     def tearDown(self):
@@ -24,8 +24,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.brands()
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/brands/'
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/brands/'
         )
 
     def test_tags(self):
@@ -33,8 +33,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.tags()
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/tags/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/tags/',
             params={}
         )
 
@@ -43,8 +43,8 @@ class AssetBankClientTest(TestCase):
         }
 
         self.asset_bank_client.tags(query)
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/tags/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/tags/',
             params=query
         )
 
@@ -53,8 +53,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.meta_properties()
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/metaproperties/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/metaproperties/',
             params={}
         )
 
@@ -63,8 +63,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.media_list()
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/media/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/media/',
             params={}
         )
 
@@ -76,8 +76,8 @@ class AssetBankClientTest(TestCase):
         }
 
         self.asset_bank_client.media_list(query)
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/media/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/media/',
             params=query
         )
 
@@ -86,8 +86,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.media_info(media_id=1111)
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/media/1111/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/media/1111/',
             params={}
         )
 
@@ -96,8 +96,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.media_download_url(media_id=1111)
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/v4/media/1111/download/',
+        self.asset_bank_client.session.get.assert_called_with(
+            '/v4/media/1111/download/',
             params={}
         )
 
@@ -106,8 +106,8 @@ class AssetBankClientTest(TestCase):
         correct params for the request and returns successfully.
         """
         self.asset_bank_client.set_media_properties(media_id=1111)
-        self.asset_bank_client.oauth2_session.post.assert_called_with(
-            endpoint='/v4/media/1111/',
+        self.asset_bank_client.session.post.assert_called_with(
+            '/v4/media/1111/',
             payload={}
         )
 
@@ -116,8 +116,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.delete_media(media_id=1111)
-        self.asset_bank_client.oauth2_session\
-            .delete.assert_called_with(endpoint='/v4/media/1111/')
+        self.asset_bank_client.session\
+            .delete.assert_called_with('/v4/media/1111/')
 
     def test_create_usage(self):
         """ Test if when we call create_usage it will use the correct params for the
@@ -131,8 +131,8 @@ class AssetBankClientTest(TestCase):
             integration_id=payload['integration_id'],
             asset_id=payload['asset_id']
         )
-        self.asset_bank_client.oauth2_session.post.assert_called_with(
-            endpoint='/media/usage/',
+        self.asset_bank_client.session.post.assert_called_with(
+            '/media/usage/',
             payload=payload
         )
 
@@ -141,8 +141,8 @@ class AssetBankClientTest(TestCase):
         request and returns successfully.
         """
         self.asset_bank_client.usage()
-        self.asset_bank_client.oauth2_session.get.assert_called_with(
-            endpoint='/media/usage/', params={}
+        self.asset_bank_client.session.get.assert_called_with(
+            '/media/usage/', params={}
         )
 
     def test_delete_usage(self):
@@ -157,9 +157,9 @@ class AssetBankClientTest(TestCase):
             integration_id=payload['integration_id'],
             asset_id=payload['asset_id']
         )
-        self.asset_bank_client.oauth2_session\
+        self.asset_bank_client.session\
             .delete.assert_called_with(
-                endpoint='/media/usage/',
+                '/media/usage/',
                 params=payload
             )
 
