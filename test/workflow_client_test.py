@@ -10,10 +10,10 @@ class WorkflowClientTest(TestCase):
         self.bynder_client = create_bynder_client()
 
         self.workflow_client = self.bynder_client.workflow_client
-        self.workflow_client.oauth2_session.get = mock.MagicMock()
-        self.workflow_client.oauth2_session.post = mock.MagicMock()
-        self.workflow_client.oauth2_session.delete = mock.MagicMock()
-        self.workflow_client.oauth2_session.put = mock.MagicMock()
+        self.workflow_client.session.get = mock.MagicMock()
+        self.workflow_client.session.post = mock.MagicMock()
+        self.workflow_client.session.delete = mock.MagicMock()
+        self.workflow_client.session.put = mock.MagicMock()
 
     def tearDown(self):
         self.bynder_client = None
@@ -24,7 +24,7 @@ class WorkflowClientTest(TestCase):
         the request and returns successfully.
         """
         self.workflow_client.users()
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/users/'
         )
 
@@ -33,7 +33,7 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.campaigns()
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/campaigns/',
             params={}
         )
@@ -43,7 +43,7 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.campaign_info(campaign_id=1111)
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/campaigns/1111/'
         )
 
@@ -57,7 +57,7 @@ class WorkflowClientTest(TestCase):
             description='campaign_description',
             responsible_id='campaign_responsible_id'
         )
-        self.workflow_client.oauth2_session.post.assert_called_with(
+        self.workflow_client.session.post.assert_called_with(
             endpoint='/workflow/campaigns/',
             json={
                 'name': 'campaign_name',
@@ -78,7 +78,7 @@ class WorkflowClientTest(TestCase):
             description='campaign_description',
             responsible_id='campaign_responsible_id'
         )
-        self.workflow_client.oauth2_session.put.assert_called_with(
+        self.workflow_client.session.put.assert_called_with(
             endpoint='/workflow/campaigns/campaign_id/',
             json={
                 'name': 'campaign_name',
@@ -93,7 +93,7 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.delete_campaign(campaign_id=1111)
-        self.workflow_client.oauth2_session.delete.assert_called_with(
+        self.workflow_client.session.delete.assert_called_with(
             endpoint='/workflow/campaigns/1111/'
         )
 
@@ -102,7 +102,7 @@ class WorkflowClientTest(TestCase):
         the request and returns successfully.
         """
         self.workflow_client.metaproperties()
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/metaproperties/'
         )
 
@@ -111,7 +111,7 @@ class WorkflowClientTest(TestCase):
         for the request and returns successfully
         """
         self.workflow_client.metaproperty_info(metaproperty_id=1111)
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/metaproperties/{}/'.format(1111)
         )
 
@@ -120,7 +120,7 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.groups()
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/groups/'
         )
 
@@ -129,7 +129,7 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.group_info(1111)
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/groups/{}/'.format(1111)
         )
 
@@ -138,7 +138,7 @@ class WorkflowClientTest(TestCase):
         the request and returns successfully.
         """
         self.workflow_client.job_preset_info(job_preset_id=1111)
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/presets/job/{}/'.format(1111)
         )
 
@@ -147,11 +147,11 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.jobs(campaign_id=1111)
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/campaigns/{}/jobs/'.format(1111)
         )
         self.workflow_client.jobs()
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/jobs/'
         )
 
@@ -165,7 +165,7 @@ class WorkflowClientTest(TestCase):
             accountable_id='job_accountable_id',
             preset_id='job_preset_id'
         )
-        self.workflow_client.oauth2_session.post.assert_called_with(
+        self.workflow_client.session.post.assert_called_with(
             endpoint='/workflow/jobs/',
             json={
                 'name': 'job_name',
@@ -180,7 +180,7 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.job_info(job_id='1111')
-        self.workflow_client.oauth2_session.get.assert_called_with(
+        self.workflow_client.session.get.assert_called_with(
             endpoint='/workflow/jobs/{}/'.format(1111)
         )
 
@@ -195,7 +195,7 @@ class WorkflowClientTest(TestCase):
             accountable_id='job_accountable_id',
             preset_id='job_preset_id'
         )
-        self.workflow_client.oauth2_session.put.assert_called_with(
+        self.workflow_client.session.put.assert_called_with(
             endpoint='/workflow/jobs/{}/'.format(1111),
             json={
                 'name': 'job_name',
@@ -210,6 +210,6 @@ class WorkflowClientTest(TestCase):
         request and returns successfully.
         """
         self.workflow_client.delete_job(job_id=1111)
-        self.workflow_client.oauth2_session.delete(
+        self.workflow_client.session.delete(
             endpoint='/workflow/jobs/{}/'.format(1111)
         )

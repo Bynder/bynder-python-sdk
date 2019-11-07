@@ -11,9 +11,9 @@ class CollectionClientTest(TestCase):
         self.bynder_client = create_bynder_client()
 
         self.collection_client = self.bynder_client.collection_client
-        self.collection_client.oauth2_session.get = mock.MagicMock()
-        self.collection_client.oauth2_session.post = mock.MagicMock()
-        self.collection_client.oauth2_session.delete = mock.MagicMock()
+        self.collection_client.session.get = mock.MagicMock()
+        self.collection_client.session.post = mock.MagicMock()
+        self.collection_client.session.delete = mock.MagicMock()
 
     def tearDown(self):
         self.bynder_client = None
@@ -24,7 +24,7 @@ class CollectionClientTest(TestCase):
         request and returns successfully.
         """
         self.collection_client.collections()
-        self.collection_client.oauth2_session.get.assert_called_with(
+        self.collection_client.session.get.assert_called_with(
             endpoint='/v4/collections/',
             params={}
         )
@@ -34,7 +34,7 @@ class CollectionClientTest(TestCase):
         request and returns successfully.
         """
         self.collection_client.collection_info(collection_id=1111)
-        self.collection_client.oauth2_session.get.assert_called_with(
+        self.collection_client.session.get.assert_called_with(
             endpoint='/v4/collections/1111/'
         )
 
@@ -46,7 +46,7 @@ class CollectionClientTest(TestCase):
         self.collection_client.create_collection(
             name=collection_name
         )
-        self.collection_client.oauth2_session.post.assert_called_with(
+        self.collection_client.session.post.assert_called_with(
             endpoint='/v4/collections/',
             payload={'name': collection_name}
         )
@@ -56,7 +56,7 @@ class CollectionClientTest(TestCase):
         params for the request and returns successfully.
         """
         self.collection_client.delete_collection(collection_id=1111)
-        self.collection_client.oauth2_session.delete\
+        self.collection_client.session.delete\
             .assert_called_with(endpoint='/v4/collections/1111/')
 
     def test_collection_media_ids(self):
@@ -64,7 +64,7 @@ class CollectionClientTest(TestCase):
         params for the request and returns successfully.
         """
         self.collection_client.collection_media_ids(collection_id=1111)
-        self.collection_client.oauth2_session.get.assert_called_with(
+        self.collection_client.session.get.assert_called_with(
             endpoint='/v4/collections/1111/media/'
         )
 
@@ -75,7 +75,7 @@ class CollectionClientTest(TestCase):
         media_ids = ['2222', '3333']
         self.collection_client.add_media_to_collection(
             collection_id=1111, media_ids=media_ids)
-        self.collection_client.oauth2_session.post.assert_called_with(
+        self.collection_client.session.post.assert_called_with(
             endpoint='/v4/collections/1111/media/',
             payload={'data': json.dumps(media_ids)}
         )
@@ -87,7 +87,7 @@ class CollectionClientTest(TestCase):
         media_ids = ['2222', '3333']
         self.collection_client.remove_media_from_collection(
             collection_id=1111, media_ids=media_ids)
-        self.collection_client.oauth2_session\
+        self.collection_client.session\
             .delete.assert_called_with(
                 endpoint='/v4/collections/1111/media/',
                 params={'deleteIds': ','.join(map(str, media_ids))}
@@ -102,7 +102,7 @@ class CollectionClientTest(TestCase):
             collection_option='view',
             recipients=[]
         )
-        self.collection_client.oauth2_session.post.assert_called_with(
+        self.collection_client.session.post.assert_called_with(
             endpoint='/v4/collections/1111/share/',
             payload={
                 'collectionOptions': 'view',

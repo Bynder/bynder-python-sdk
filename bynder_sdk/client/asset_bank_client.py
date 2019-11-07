@@ -5,21 +5,21 @@ class AssetBankClient:
     """ Client used for all the operations that can be done to the
     Bynder Asset Bank.
     """
-    def __init__(self, oauth2_session):
-        self.oauth2_session = oauth2_session
-        self.upload_client = UploadClient(oauth2_session)
+    def __init__(self, session):
+        self.session = session
+        self.upload_client = UploadClient(session)
 
     def brands(self):
         """ Gets list of the brands.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/brands/'
         )
 
     def tags(self, query: dict = None):
         """ Gets list of the tags.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/tags/',
             params=query or {}
         )
@@ -27,7 +27,7 @@ class AssetBankClient:
     def meta_properties(self, query: dict = None):
         """ Gets list of the meta properties.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/metaproperties/',
             params=query or {}
         )
@@ -35,7 +35,7 @@ class AssetBankClient:
     def media_list(self, query: dict = None):
         """ Gets a list of media assets filtered by parameters.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/media/',
             params=query or {}
         )
@@ -43,7 +43,7 @@ class AssetBankClient:
     def media_info(self, media_id, versions: dict = None):
         """ Gets all the media information for a specific media id.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/media/{0}/'.format(media_id),
             params=versions or {}
         )
@@ -51,7 +51,7 @@ class AssetBankClient:
     def media_download_url(self, media_id, query: dict = None):
         """ Gets the download file URL for a specific media id.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/media/{0}/download/'.format(media_id),
             params=query or {}
         )
@@ -59,7 +59,7 @@ class AssetBankClient:
     def set_media_properties(self, media_id, query: dict = None):
         """ Updates the media properties (metadata) for a specific media id.
         """
-        return self.oauth2_session.post(
+        return self.session.post(
             endpoint='/v4/media/{0}/'.format(media_id),
             payload=query or {}
         )
@@ -67,7 +67,7 @@ class AssetBankClient:
     def delete_media(self, media_id):
         """ Deletes a media asset.
         """
-        return self.oauth2_session.delete(
+        return self.session.delete(
             endpoint='/v4/media/{0}/'.format(media_id)
         )
 
@@ -78,7 +78,7 @@ class AssetBankClient:
             query = {}
         query['integration_id'] = integration_id
         query['asset_id'] = asset_id
-        return self.oauth2_session.post(
+        return self.session.post(
             endpoint='/media/usage/',
             payload=query
         )
@@ -86,7 +86,7 @@ class AssetBankClient:
     def usage(self, query: dict = None):
         """ Gets all the media assets usage records.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/media/usage/',
             params=query or {}
         )
@@ -98,7 +98,7 @@ class AssetBankClient:
             query = {}
         query['integration_id'] = integration_id
         query['asset_id'] = asset_id
-        return self.oauth2_session.delete(
+        return self.session.delete(
             endpoint='/media/usage/',
             params=query
         )

@@ -4,13 +4,13 @@ import json
 class CollectionClient:
     """ Client used for all the operations that can be done to collections.
     """
-    def __init__(self, oauth2_session):
-        self.oauth2_session = oauth2_session
+    def __init__(self, session):
+        self.session = session
 
     def collections(self, query: dict = None):
         """ Gets list of the collections.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/collections/',
             params=query or {}
         )
@@ -18,7 +18,7 @@ class CollectionClient:
     def collection_info(self, collection_id):
         """ Gets all the collection information for a specific collection id.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/collections/{0}/'.format(collection_id)
         )
 
@@ -28,7 +28,7 @@ class CollectionClient:
         if query is None:
             query = {}
         query['name'] = name
-        return self.oauth2_session.post(
+        return self.session.post(
             endpoint='/v4/collections/',
             payload=query
         )
@@ -36,14 +36,14 @@ class CollectionClient:
     def delete_collection(self, collection_id):
         """ Deletes a collection.
         """
-        return self.oauth2_session.delete(
+        return self.session.delete(
             endpoint='/v4/collections/{0}/'.format(collection_id)
         )
 
     def collection_media_ids(self, collection_id):
         """ Gets a list of the media assets ids of a collection.
         """
-        return self.oauth2_session.get(
+        return self.session.get(
             endpoint='/v4/collections/{0}/media/'.format(collection_id)
         )
 
@@ -53,7 +53,7 @@ class CollectionClient:
         query = {
             'data': json.dumps(media_ids)
         }
-        return self.oauth2_session.post(
+        return self.session.post(
             endpoint='/v4/collections/{0}/media/'.format(collection_id),
             payload=query
         )
@@ -64,7 +64,7 @@ class CollectionClient:
         query = {
             'deleteIds': ','.join(map(str, media_ids))
         }
-        return self.oauth2_session.delete(
+        return self.session.delete(
             endpoint='/v4/collections/{0}/media/'.format(collection_id),
             params=query
         )
@@ -83,7 +83,7 @@ class CollectionClient:
             query = {}
         query['collectionOptions'] = collection_option
         query['recipients'] = ','.join(map(str, recipients))
-        return self.oauth2_session.post(
+        return self.session.post(
             endpoint='/v4/collections/{0}/share/'.format(collection_id),
             payload=query
         )
