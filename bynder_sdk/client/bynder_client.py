@@ -4,7 +4,7 @@ from bynder_sdk.client.collection_client import CollectionClient
 from bynder_sdk.client.pim_client import PIMClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
-from bynder_sdk.permanent_token import BynderAPISession
+from bynder_sdk.permanent_token import PermanentTokenSession
 
 
 REQUIRED_OAUTH_KWARGS = (
@@ -19,7 +19,7 @@ class BynderClient:
     # pylint: disable-msg=too-many-arguments
     def __init__(self, domain, **kwargs):
         if 'permanent_token' in kwargs:
-            self.session = BynderAPISession(
+            self.session = PermanentTokenSession(
                 domain, kwargs['permanent_token'])
         else:
             missing = [
