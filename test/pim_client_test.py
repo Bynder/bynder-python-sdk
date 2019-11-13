@@ -10,8 +10,8 @@ class PIMClientTest(TestCase):
         self.bynder_client = create_bynder_client()
 
         self.pim_client = self.bynder_client.pim_client
-        self.pim_client.oauth2_session.get = mock.MagicMock()
-        self.pim_client.oauth2_session.put = mock.MagicMock()
+        self.pim_client.session.get = mock.MagicMock()
+        self.pim_client.session.put = mock.MagicMock()
 
     def tearDown(self):
         self.bynder_client = None
@@ -22,8 +22,8 @@ class PIMClientTest(TestCase):
         the request and returns successfully.
         """
         self.pim_client.metaproperties()
-        self.pim_client.oauth2_session.get.assert_called_with(
-            endpoint='/pim/metaproperties/'
+        self.pim_client.session.get.assert_called_with(
+            '/pim/metaproperties/'
         )
 
     def test_metaproperty_info(self):
@@ -31,8 +31,8 @@ class PIMClientTest(TestCase):
         for the request and returns successfully.
         """
         self.pim_client.metaproperty_info(metaproperty_id=1111)
-        self.pim_client.oauth2_session.get(
-            endpoint='/pim/metaproperties/{}/'.format(1111)
+        self.pim_client.session.get(
+            '/pim/metaproperties/{}/'.format(1111)
         )
 
     def test_metaproperty_options(self):
@@ -40,8 +40,8 @@ class PIMClientTest(TestCase):
         for the request and returns successfully.
         """
         self.pim_client.metaproperty_options(metaproperty_id=1111)
-        self.pim_client.oauth2_session.get(
-            endpoint='/pim/metaproperties/{}/options/'.format(1111)
+        self.pim_client.session.get(
+            '/pim/metaproperties/{}/options/'.format(1111)
         )
 
     def test_edit_metaproperty_option(self):
@@ -52,8 +52,8 @@ class PIMClientTest(TestCase):
             metaproperty_option_id=1111,
             children=['2222', '3333']
         )
-        self.pim_client.oauth2_session.put.assert_called_with(
-            endpoint='/pim/metapropertyoptions/{}/'.format(1111),
+        self.pim_client.session.put.assert_called_with(
+            '/pim/metapropertyoptions/{}/'.format(1111),
             json={'children': ['2222', '3333']}
         )
 
@@ -61,7 +61,7 @@ class PIMClientTest(TestCase):
             metaproperty_option_id='1111',
             children='2222'
         )
-        self.pim_client.oauth2_session.put.assert_called_with(
-            endpoint='/pim/metapropertyoptions/{}/'.format(1111),
+        self.pim_client.session.put.assert_called_with(
+            '/pim/metapropertyoptions/{}/'.format(1111),
             json={'children': ['2222']}
         )

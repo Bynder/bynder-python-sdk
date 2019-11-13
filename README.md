@@ -55,7 +55,8 @@ First import the BynderClient:
 from bynder_sdk import BynderClient
 ```
 
-Then create an instance of the client:
+When using OAuth2, create an instance of the client and use the flow
+to receive a token:
 
 ```python
 bynder_client = BynderClient(
@@ -65,14 +66,19 @@ bynder_client = BynderClient(
     client_secret='',
     token_saver=token_saver
 )
-```
 
-Get an OAuth2 token following the OAuth2 flow:
-
-```python
 print(bynder_client.get_authorization_url())
 code = input('Code: ')
 bynder_client.fetch_token(code)
+```
+
+When using a permanent token, the client instance can be created like this:
+
+```python
+bynder_client = BynderClient(
+  domain='portal.getbynder.com',
+  permanent_token=''
+)
 ```
 
 Finally call one of the API's endpoints through one of the clients:

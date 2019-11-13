@@ -27,12 +27,12 @@ class BynderClientTest(TestCase):
         self.assertIsInstance(client.pim_client, PIMClient)
         self.assertIsInstance(client.workflow_client, WorkflowClient)
 
-        self.assertEqual(client.oauth2_session.token, TOKEN)
+        self.assertEqual(client.session.token, TOKEN)
 
     @mock.patch('bynder_sdk.oauth2.BynderOAuth2Session')
     def test_fetch_token(self, oauth2_mock):
         client = self.bynder_client
-        client.oauth2_session = oauth2_mock
+        client.session = oauth2_mock
 
         kwargs = {
             'code': 'code',
@@ -40,4 +40,4 @@ class BynderClientTest(TestCase):
         }
 
         client.fetch_token(**kwargs)
-        client.oauth2_session.fetch_token.assert_called_once_with(**kwargs)
+        client.session.fetch_token.assert_called_once_with(**kwargs)
