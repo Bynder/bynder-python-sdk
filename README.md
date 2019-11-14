@@ -125,10 +125,10 @@ Media management.
 
 ```python
 brands()
+tags()
+meta_properties()
 media_list(query)
 media_info(media_id, query)
-meta_properties()
-tags()
 media_download_url()
 set_media_properties(media_id, query)
 delete_media(media_id)
@@ -174,20 +174,20 @@ All the workflow related calls.
 
 ```python
 users()
-groups()
-group_info(group_id)
-metaproperties()
-metaproperty_info(metaproperty_id)
 campaigns(query)
 campaign_info(campaign_id)
 create_campaign(name, key, description, responsibleID, query)
-edit_campaign(campaign_id, name, key, description, responsibleID, query)
 delete_campaign(campaign_id)
+edit_campaign(campaign_id, name, key, description, responsibleID, query)
+metaproperties()
+metaproperty_info(metaproperty_id)
+groups()
+group_info(group_id)
 job_preset_info(job_preset_info)
 jobs(campaign_id)
 create_job(name, campaignID, accountableID, presetID, query)
-edit_job(job_id, name, campaignID, accauntableID, presetID, query)
 job_info(job_id)
+edit_job(job_id, name, campaignID, accauntableID, presetID, query)
 delete_job(job_id)}
 ```
 
