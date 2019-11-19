@@ -48,7 +48,7 @@ class CollectionClientTest(TestCase):
         )
         self.collection_client.session.post.assert_called_with(
             '/v4/collections/',
-            payload={'name': collection_name}
+            data={'name': collection_name}
         )
 
     def test_delete_collection(self):
@@ -77,7 +77,7 @@ class CollectionClientTest(TestCase):
             collection_id=1111, media_ids=media_ids)
         self.collection_client.session.post.assert_called_with(
             '/v4/collections/1111/media/',
-            payload={'data': json.dumps(media_ids)}
+            data={'data': json.dumps(media_ids)}
         )
 
     def test_remove_media_from_collection(self):
@@ -104,7 +104,7 @@ class CollectionClientTest(TestCase):
         )
         self.collection_client.session.post.assert_called_with(
             '/v4/collections/1111/share/',
-            payload={
+            data={
                 'collectionOptions': 'view',
                 'recipients': ','.join(map(str, []))
             }

@@ -50,7 +50,7 @@ class AssetBankClient:
         """
         return self.session.post(
             '/v4/media/{0}/'.format(media_id),
-            payload=query or {}
+            data=query or {}
         )
 
     def delete_media(self, media_id):
@@ -66,7 +66,7 @@ class AssetBankClient:
         query['integration_id'] = integration_id
         query['asset_id'] = asset_id
 
-        return self.session.post('/media/usage/', payload=query)
+        return self.session.post('/media/usage/', data=query)
 
     def usage(self, query: dict = None):
         """ Gets all the media assets usage records.

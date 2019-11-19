@@ -23,7 +23,7 @@ class CollectionClient:
         if query is None:
             query = {}
         query['name'] = name
-        return self.session.post('/v4/collections/', payload=query)
+        return self.session.post('/v4/collections/', data=query)
 
     def delete_collection(self, collection_id):
         """ Deletes a collection.
@@ -47,7 +47,7 @@ class CollectionClient:
         }
         return self.session.post(
             '/v4/collections/{0}/media/'.format(collection_id),
-            payload=query
+            data=query
         )
 
     def remove_media_from_collection(self, collection_id, media_ids: list):
@@ -77,5 +77,5 @@ class CollectionClient:
         query['recipients'] = ','.join(map(str, recipients))
         return self.session.post(
             '/v4/collections/{0}/share/'.format(collection_id),
-            payload=query
+            data=query
         )
