@@ -106,6 +106,11 @@ media_info = asset_bank_client.media_info(
 )
 pp.pprint(media_info)
 
+print('\n Set media description:')
+media = asset_bank_client.set_media_properties(
+    media_id,
+    {'description': 'Description set using SDK'}
+)
 
 print('\n> Get download url:')
 download_url = asset_bank_client.media_download_url(

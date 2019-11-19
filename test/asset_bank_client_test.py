@@ -108,7 +108,7 @@ class AssetBankClientTest(TestCase):
         self.asset_bank_client.set_media_properties(media_id=1111)
         self.asset_bank_client.session.post.assert_called_with(
             '/v4/media/1111/',
-            payload={}
+            data={}
         )
 
     def test_delete_media(self):
@@ -133,7 +133,7 @@ class AssetBankClientTest(TestCase):
         )
         self.asset_bank_client.session.post.assert_called_with(
             '/media/usage/',
-            payload=payload
+            data=payload
         )
 
     def test_get_usage(self):
