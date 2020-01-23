@@ -5,7 +5,7 @@ Bynder Python SDK
 
 The main goal of this SDK is to speed up the integration of Bynder
 customers who use Python. Making it easier to connect to the Bynder API
-(<http://docs.bynder.apiary.io>) and execute requests on it.
+(<https://bynder.docs.apiary.io>) and execute requests on it.
 
 _**Note:** As of version 1.0.0 this SDK now uses OAuth 2.0. For the last
 version using OAuth 1.0a please refer to
