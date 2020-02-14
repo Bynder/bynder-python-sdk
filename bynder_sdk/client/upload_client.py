@@ -5,7 +5,7 @@ import time
 
 MAX_CHUNK_SIZE = 1024 * 1024 * 5
 MAX_POLLING_ITERATIONS = 60
-POLLING_IDLE_TIME = 10
+POLLING_IDLE_TIME = 5
 
 
 # pylint: disable-msg=too-few-public-methods
@@ -130,6 +130,7 @@ class UploadClient():
         """ Gets poll processing status of finalised files.
         """
         for _ in range(MAX_POLLING_ITERATIONS):
+            time.sleep(POLLING_IDLE_TIME)
             status_dict = self.session.get(
                 '/v4/upload/poll/',
                 params={'items': [import_id]}
@@ -137,8 +138,6 @@ class UploadClient():
 
             if [v for k, v in status_dict.items() if import_id in v]:
                 return status_dict
-
-            time.sleep(POLLING_IDLE_TIME)
 
         # Max polling iterations reached => upload failed
         status_dict['itemsFailed'].append(import_id)
