@@ -1,3 +1,11 @@
+with open('../VERSION') as fh:
+    __version__ = fh.read().strip()
+    fh.close()
+
+UA_HEADER = {
+    'User-Agent': 'bynder-python-sdk/{}'.format(__version__)
+}
+
 def api_endpoint_url(session, endpoint):
     return 'https://{}/api{}'.format(session.bynder_domain, endpoint)
 
@@ -11,6 +19,11 @@ def parse_json_for_response(response):
 
 class SessionMixin:
     def wrapped_request(self, func, endpoint, *args, **kwargs):
+        if 'headers' in kwargs:
+            kwargs['headers'].update(UA_HEADER)
+        else:
+            kwargs['headers'] = UA_HEADER
+
         endpoint = api_endpoint_url(self, endpoint)
 
         response = func(endpoint, *args, **kwargs)
@@ -26,6 +39,7 @@ class SessionMixin:
             # Do not send the Authorization header to S3
             kwargs['headers'] = {'Authorization': None}
             return super().post(url, *args, **kwargs)
+
         return self.wrapped_request(super().post, url, *args, **kwargs)
 
     def put(self, url, *args, **kwargs):
