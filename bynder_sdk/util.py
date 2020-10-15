@@ -1,4 +1,4 @@
-with open('../VERSION') as fh:
+with open('VERSION') as fh:
     __version__ = fh.read().strip()
     fh.close()
 
