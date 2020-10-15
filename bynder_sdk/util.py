@@ -2,9 +2,11 @@ with open('VERSION') as fh:
     __version__ = fh.read().strip()
     fh.close()
 
+
 UA_HEADER = {
     'User-Agent': 'bynder-python-sdk/{}'.format(__version__)
 }
+
 
 def api_endpoint_url(session, endpoint):
     return 'https://{}/api{}'.format(session.bynder_domain, endpoint)

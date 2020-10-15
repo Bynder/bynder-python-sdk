@@ -5,6 +5,12 @@ from bynder_sdk.util import api_endpoint_url
 
 
 TEST_DOMAIN = 'test.getbynder.com'
+VERSION = None
+
+
+with open('VERSION') as fh:
+    VERSION = fh.read().strip()
+    fh.close()
 
 
 class OAuth2Test(TestCase):
@@ -44,4 +50,14 @@ class OAuth2Test(TestCase):
             client_secret='client_secret',
             include_client_id=True,
             code='code',
+        )
+
+    @mock.patch('requests_oauthlib.OAuth2Session.get')
+    def test_user_agent_header(self, mocked_func):
+        self.session.get('/upload')
+        mocked_func.assert_called_with(
+            'https://test.getbynder.com/api/upload',
+            headers={
+                'User-Agent': 'bynder-python-sdk/{}'.format(VERSION)
+            }
         )
