@@ -5,12 +5,6 @@ from bynder_sdk.util import api_endpoint_url, SDK_VERSION
 
 
 TEST_DOMAIN = 'test.getbynder.com'
-VERSION = None
-
-
-with open('VERSION') as fh:
-    VERSION = fh.read().strip()
-    fh.close()
 
 
 class OAuth2Test(TestCase):
