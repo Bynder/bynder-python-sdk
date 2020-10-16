@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 
 from bynder_sdk.oauth2 import BynderOAuth2Session, oauth2_url
-from bynder_sdk.util import api_endpoint_url, SDK_VERSION
+from bynder_sdk.util import api_endpoint_url, UA_HEADER
 
 
 TEST_DOMAIN = 'test.getbynder.com'
@@ -47,8 +47,5 @@ class OAuth2Test(TestCase):
         )
 
     def test_user_agent_header(self):
-        expected_ua_header = {
-            'User-Agent': f'bynder-python-sdk/{SDK_VERSION}'
-        }
         # The UA header is contained within the session headers
-        assert expected_ua_header.items() <= self.session.headers.items()
+        assert UA_HEADER.items() <= self.session.headers.items()

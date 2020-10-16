@@ -2,7 +2,7 @@ with open('VERSION') as fh:
     SDK_VERSION = fh.read().strip()
 
 UA_HEADER = {
-    'User-Agent': f'bynder-python-sdk/{SDK_VERSION}'
+    'User-Agent': 'bynder-python-sdk/{}'.format(SDK_VERSION)
 }
 
 
