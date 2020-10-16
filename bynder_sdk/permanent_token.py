@@ -1,6 +1,6 @@
 from requests import Session
 
-from bynder_sdk.util import SessionMixin, UA_HEADER
+from bynder_sdk.util import SessionMixin
 
 
 class PermanentTokenSession(SessionMixin, Session):

@@ -3,7 +3,7 @@ import string
 
 from requests_oauthlib import OAuth2Session
 
-from bynder_sdk.util import SessionMixin, UA_HEADER
+from bynder_sdk.util import SessionMixin
 
 
 def oauth2_url(bynder_domain, endpoint):
