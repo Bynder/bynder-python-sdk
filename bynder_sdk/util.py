@@ -5,6 +5,7 @@ UA_HEADER = {
     'User-Agent': f'bynder-python-sdk/{SDK_VERSION}'
 }
 
+
 def api_endpoint_url(session, endpoint):
     return 'https://{}/api{}'.format(session.bynder_domain, endpoint)
 

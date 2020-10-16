@@ -50,5 +50,5 @@ class OAuth2Test(TestCase):
         expected_ua_header = {
             'User-Agent': f'bynder-python-sdk/{SDK_VERSION}'
         }
-        # the UA header is contained within the session headers
+        # The UA header is contained within the session headers
         assert expected_ua_header.items() <= self.session.headers.items()
