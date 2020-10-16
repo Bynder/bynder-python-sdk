@@ -1,12 +1,9 @@
 with open('VERSION') as fh:
-    __version__ = fh.read().strip()
-    fh.close()
-
+    SDK_VERSION = fh.read().strip()
 
 UA_HEADER = {
-    'User-Agent': 'bynder-python-sdk/{}'.format(__version__)
+    'User-Agent': f'bynder-python-sdk/{SDK_VERSION}'
 }
-
 
 def api_endpoint_url(session, endpoint):
     return 'https://{}/api{}'.format(session.bynder_domain, endpoint)
@@ -21,13 +18,7 @@ def parse_json_for_response(response):
 
 class SessionMixin:
     def wrapped_request(self, func, endpoint, *args, **kwargs):
-        if 'headers' in kwargs:
-            kwargs['headers'].update(UA_HEADER)
-        else:
-            kwargs['headers'] = UA_HEADER
-
         endpoint = api_endpoint_url(self, endpoint)
-
         response = func(endpoint, *args, **kwargs)
         response.raise_for_status()
 
@@ -49,3 +40,6 @@ class SessionMixin:
 
     def delete(self, url, *args, **kwargs):
         return self.wrapped_request(super().delete, url, *args, **kwargs)
+
+    def _set_ua_header(self):
+        self.headers.update(UA_HEADER)

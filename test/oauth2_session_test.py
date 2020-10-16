@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 
 from bynder_sdk.oauth2 import BynderOAuth2Session, oauth2_url
-from bynder_sdk.util import api_endpoint_url
+from bynder_sdk.util import api_endpoint_url, SDK_VERSION
 
 
 TEST_DOMAIN = 'test.getbynder.com'
@@ -52,12 +52,9 @@ class OAuth2Test(TestCase):
             code='code',
         )
 
-    @mock.patch('requests_oauthlib.OAuth2Session.get')
-    def test_user_agent_header(self, mocked_func):
-        self.session.get('/upload')
-        mocked_func.assert_called_with(
-            'https://test.getbynder.com/api/upload',
-            headers={
-                'User-Agent': 'bynder-python-sdk/{}'.format(VERSION)
-            }
-        )
+    def test_user_agent_header(self):
+        expected_ua_header = {
+            'User-Agent': f'bynder-python-sdk/{SDK_VERSION}'
+        }
+        # the UA header is contained within the session headers
+        assert expected_ua_header.items() <= self.session.headers.items()

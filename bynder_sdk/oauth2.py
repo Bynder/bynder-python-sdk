@@ -3,7 +3,7 @@ import string
 
 from requests_oauthlib import OAuth2Session
 
-from bynder_sdk.util import SessionMixin
+from bynder_sdk.util import SessionMixin, UA_HEADER
 
 
 def oauth2_url(bynder_domain, endpoint):
@@ -18,6 +18,8 @@ class BynderOAuth2Session(SessionMixin, OAuth2Session):
         kwargs['auto_refresh_url'] = oauth2_url(self.bynder_domain, 'token')
 
         super().__init__(*args, **kwargs)
+
+        self._set_ua_header()
 
     def authorization_url(self):
         state = ''.join([
