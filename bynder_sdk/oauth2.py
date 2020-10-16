@@ -19,6 +19,8 @@ class BynderOAuth2Session(SessionMixin, OAuth2Session):
 
         super().__init__(*args, **kwargs)
 
+        self._set_ua_header()
+
     def authorization_url(self):
         state = ''.join([
             random.choice(string.ascii_letters + string.digits)

@@ -9,5 +9,7 @@ class PermanentTokenSession(SessionMixin, Session):
 
         self.bynder_domain = bynder_domain
         self.headers.update({
-            'Authorization': 'Bearer {}'.format(permanent_token)
+            'Authorization': 'Bearer {}'.format(permanent_token),
         })
+
+        self._set_ua_header()
