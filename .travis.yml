@@ -23,7 +23,9 @@ deploy:
   provider: pypi
   username: __token__
   password:
-    secure: $PYPI_TOKEN
   on:
     tags: true
     repo: Bynder/bynder-python-sdk
+    branches:
+      only:
+        - test_travis_python
