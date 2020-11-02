@@ -23,7 +23,7 @@ deploy:
   provider: pypi
   username: __token__
   password:
-    secure: e4ZmBSXNVzYZK2lZ2ErbXcE0YwkVkuYd7Bl8B9NQ3Gvxr/PS82CQLNwLMwqeb7/5Ts87kquY2uTXCVj4vbGlqVq7WdgaAeUYwJk6YkTML/ZF2mZg/a3YxvXovzNHmR3D+S+BpMckmTEUwZe5lecfWr9YbV0bpm9O9D+F0WAR49JoyBnknpdisrtvFfEVLEWjofeZ7iULbZH9zRGUFSFhmXSfTJvV+Xc4784T95Q0YK2beD5DWPBtF1wxE4HHs6+vrdmH7qwfhaor0y3OJY/qVxEptjQzUIdsvXUJdi2RSNdeTrVQMGkx0uSZ0hEW4pdWeE5RFjImtL7ah2ZMUk+Ei6t3urR0BSzAZmkt9U6abu/6Smx/MeY926WIvfODGS6aiqiV0o/Nem0B93XwIfAiBLKf+GEHgkAOuyY6zMpd+IYUaAA1mFm+Rp4OGvD7Yeuw4UY0c9HsxaS0bvgKuowswrLL7SXZEWdqnLn2N/SKaMP1VHRi+oypitmT4Qq/ViwbK/JIS4M61fnFHkTuNsNhNiI2hQiFErq0OvLvQaajujgj/MGYHSnQUwMKXWWh+nAdoiuWXKIaJvOpXpBtYohveHhNPmZq+cCOu5A7MXaEgxEtces53eVZ5EGdvbrngpd/VPUg8DD9am6eKjdmpVwy3uAUCY72ofr09YlGqzBjLsA=
+    secure: $PYPI_TOKEN
   on:
     tags: true
     repo: Bynder/bynder-python-sdk
