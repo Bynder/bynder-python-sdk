@@ -25,5 +25,6 @@ deploy:
   password:
     secure: $PYPI_TOKEN
   on:
+    python: "3.6"  # or the highest if we update the python list
     tags: true
     repo: Bynder/bynder-python-sdk
