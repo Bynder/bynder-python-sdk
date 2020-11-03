@@ -1,5 +1,7 @@
 language: python
 
+sudo: false
+
 python: "3.6"  # or the highest if we update the python list
 
 before_install: pip install pytest-cov
@@ -19,7 +21,7 @@ deploy:
   provider: pypi
   username: "__token__"
   password:
-    secure: "cuqVZZRpISkCm8jJ2yqTlhxxtEyDSbkz+JOTdo1hChFx1zVadmNek9aP1GZzzAYyoi9UFDw3xyuGhVEwgQAIPSg0PPPyVZlexHO635kAaEsHg3jH16B5dR1QXGE7hYiNGNEskxfFqvV9QYn9ILLacg90fNUDPYfLjouOnbcJ9rQNILDljED7GFxfDrrWG+RcJwacdtZDcPPZoVpOkpsCxdtQHudKl8wy9St9PTccEe0IIfrTDxOusz//SpbIA+6fmp/nzsf6cHD3o4x3tT4GB8srtliwHXJmYaPJqtDtqYHE5+lD/Oar38+z6FzCftcf+g6INab3em+ZkjwZSnhAKKYeNxiw16MEa8f+Xlz36BVER2MT/V0jewVffaCPUOZqsUhkSefS/egPceC8I3X1fEfX/hEO/SJILAALgf5c4CFNYJPwWDzg5E2oOgshwOomG4G7MJnNzUglf7y/gaCXxAtRGyXHbtP0Iaz2W03FA8a/umWi/xjcrLVH6dP7M7plkOSWZTXr3WD1LKA6cMzm5w97ZL93dSjSWhbWJV79nted1G4rWmbIgILLvPptMkySrivvDqOV3LRRtgV+B8JFn1S2XBtY2IMQoNo0CZgS0LULayvKP7QAQ1hpS2N0f7LA76cj7gxe2zBuLVlt1tkYEH888SvveSdr994r3XSJmRQ="
+    secure: "pty4yLZ5vvxUax/eaNkWwwlBBHR+fVvd6kWBjGkerNCN9/+yhgINsfHp21owGvovP7GCKqP10yCMtk306+8EEf2VbLsGrdlasgb6YaDbNK9p92bUZ2cz34g09g2dwafSQaKLe+1rdWyIIMa1nrZV4fAOBt2yeJvsvxqaZOgHzr2+msjNFibho0hZTCxMV4jRA01LzeXdSNNGR4phNoNud61WCnkee5/SdgxG6Bd+F3TCxXX/qJUMs5OHJjjKUSBhh/TGnuOOLNcUUhW71CQomPW3dQTJ3uDUG62KJumr/3DZpvVlvRCa+W6HYQbWeGzTYTtEjJ2WT+Eqzg91W+Up2/g1ramP/Htrvoi+WBQ8aYR3y8mcXpM6FUI1Q02seozgCJUIAvUIJsdnjrtTNVM1IQSyGOCCP9znkfaLYx4BqBVBHXdLHrDB4raleT5wVpfqPXKNWIfuMuiLH7P3vogZupMeoxv/FVXthakJTx45oAQlN8AvQTbPKuML4wyjvw1ce3GBLVU6kyu4vmKbxq8czYzYonNULtgc1BfDYwhkuPAiywz7BJ3z9ccU38+VE2V0B8uCjQFPGvbm1IN3f6W38PMcETiz5OviqBy412y/CxPtyv48z0YOljIosrx9RWVbCk0Y2IYJs4VpfSYvzT/W++MQdI1yvZL97NetNTUymaU="
   distributions: "bdist_wheel"
   on:
     branch: stage
