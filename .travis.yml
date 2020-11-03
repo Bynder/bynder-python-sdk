@@ -2,7 +2,6 @@ language: python
 
 python: "3.6"  # or the highest if we update the python list
 
-
 before_install: pip install pytest-cov
 
 install: pip install -e .
@@ -20,7 +19,7 @@ deploy:
   provider: pypi
   username: "__token__"
   password:
-    secure: "KCThollg1tEuD1ZwQ4H1W78QTVyoQCMUwSmFXVHSqEV43BvyaYXsm5itpvLE8DizN6Mc2lKpfq9u00lO7yJcUrJ5DsOyHs2U2T6J9JvG1AMpFVSwnLQSJHkZFgGKfXyt+XL9J8lsI/gBGeuIWPn9ZeFmi/QBdUV3Mm1Y+jRNG0KYBvx+4OeMQmmpjly83mrEP4AaifyTUwRtIgYo1fvO40m19iA52HcI/b5OcWLCBudxMxOhg1ULujz6B1x8Ir3HDiKni6AINTUdIYRW2qxZRtSOLaFYYLTYVtZE4D2s+o4cCxUmEnCXmXsA31baUHn/HLeB/4lW2A+XiH97GX7Zqylbn12tLfLWtbf87TtwHodxGMt9XiOQG6hysVIS4OpjiZOUYvS8Mj2VA8nd5Tt5uYoy42qHWXc4uiFDpXkV0MlwTLcnZT9r6QUtQzbFhgNV5vOnTRtCX4PmtQLswct/8dEHI+3x0mEsjjjImDD4Mpc6MqzeiJVZ7s3VZusB77f2tzkwakOFUhj4ssX1r4+3u3dEf24UC+uhEnQMawtDeMky0N3vQT+FX5zvueDIjceuarn0TnCfRzZ1prOXbz/YYPUJk55Aw5aF/2tQomQoB+gn9Ye/yWfxQaNum9CHkA4xOgRdQZTAxV2Vpkmss4IMCUmCExqlF6V98hoR2ywDrSY="
+    secure: $PYPI_TOKEN_BYNDER_TEST
   distributions: "bdist_wheel"
   on:
     branch: stage
