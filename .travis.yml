@@ -22,8 +22,7 @@ notifications:
 deploy:
   provider: pypi
   username: __token__
-  password:
-    secure: $PYPI_API_TOKEN
+  password: $PYPI_API_TOKEN
   on:
     repo: Bynder/bynder-python-sdk
     branch: stage
