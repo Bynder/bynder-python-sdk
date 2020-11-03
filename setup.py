@@ -133,7 +133,7 @@ commands = {
 }
 
 setup(
-    name='bynder-sdk-test-stage',
+    name='bynder-sdk-stage-test',
     version=build_version,
     description=(
         'Bynder SDK can be used to speed up the'
