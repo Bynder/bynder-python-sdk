@@ -23,7 +23,7 @@ deploy:
   provider: pypi
   username: "__token__"
   password:
-    secure: "pty4yLZ5vvxUax/eaNkWwwlBBHR+fVvd6kWBjGkerNCN9/+yhgINsfHp21owGvovP7GCKqP10yCMtk306+8EEf2VbLsGrdlasgb6YaDbNK9p92bUZ2cz34g09g2dwafSQaKLe+1rdWyIIMa1nrZV4fAOBt2yeJvsvxqaZOgHzr2+msjNFibho0hZTCxMV4jRA01LzeXdSNNGR4phNoNud61WCnkee5/SdgxG6Bd+F3TCxXX/qJUMs5OHJjjKUSBhh/TGnuOOLNcUUhW71CQomPW3dQTJ3uDUG62KJumr/3DZpvVlvRCa+W6HYQbWeGzTYTtEjJ2WT+Eqzg91W+Up2/g1ramP/Htrvoi+WBQ8aYR3y8mcXpM6FUI1Q02seozgCJUIAvUIJsdnjrtTNVM1IQSyGOCCP9znkfaLYx4BqBVBHXdLHrDB4raleT5wVpfqPXKNWIfuMuiLH7P3vogZupMeoxv/FVXthakJTx45oAQlN8AvQTbPKuML4wyjvw1ce3GBLVU6kyu4vmKbxq8czYzYonNULtgc1BfDYwhkuPAiywz7BJ3z9ccU38+VE2V0B8uCjQFPGvbm1IN3f6W38PMcETiz5OviqBy412y/CxPtyv48z0YOljIosrx9RWVbCk0Y2IYJs4VpfSYvzT/W++MQdI1yvZL97NetNTUymaU="
+    secure: $TEST_TKN
   distributions: "bdist_wheel"
   on:
     branch: stage
