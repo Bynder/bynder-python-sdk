@@ -1,6 +1,10 @@
 language: python
 
-python: "3.6"  # or the highest if we update the python list
+sudo: false
+
+python:
+  - "3.5"
+  - "3.6"
 
 before_install: pip install pytest-cov
 
