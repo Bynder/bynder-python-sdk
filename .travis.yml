@@ -28,4 +28,4 @@ deploy:
     repo: Bynder/bynder-python-sdk
     branches:
       only:
-        - test_travis_python
+        - stage
