@@ -19,7 +19,7 @@ deploy:
   provider: pypi
   username: "__token__"
   password:
-    secure: $PYPI_TOKEN_BYNDER_TEST
+    secure: $TEST_TOKEN
   distributions: "bdist_wheel"
   on:
     branch: stage
