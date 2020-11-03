@@ -23,7 +23,7 @@ deploy:
   provider: pypi
   username: __token__
   password:
-    secure: Ad0LAD4gAnKRdQYs8KIxYREBskRmX6mEawBA3NZeT/2cH01l4jsEQrfRH+5vGqXD/FWeP6n5gfxwOV9rFRR5tZg/PVRBPGuSizB3K07Pcgte8N0w728PF/8p/+cs0wEjbNQJfzAC6RTgOE2VfvXDz0X7xDhg+PvzW8ig4fBB6DpOLKKaFM3nl3CckDAMLpi3JnAXHyvI7xHHLlDIGfRGkz6PwoQUhSDGWfOyXkSDUeYpLMhY7w+bJIU6Yb5xh1GVA7V5gUbh8vIx6jtCUfG3+mIZBZkTBY+vx8xzr5Ynr1OVJ95TwhYy2g3snc+w3mG0Mjo8Ux5UAsm9aA6k4pG5hLDXF8UxXVX02gT8VWHcxqsxRjWbqxLpcBRtbX78uNOxkJAfCPUoMB92uG4kEvFuZpzHOBvuEh49f0p4R1ioSR8EiJs2P4kXm1d6R5i6kUJb8QyX8aIcH+C0FjGKdFFFlJql47NQfjGzLLW/rjxcZvo5KfSd6umEi2YCm4vVw5o6Vo7zoGkitvHDJcnGWpDy/dBwkB5iT5nyvyKQTeaseWSNi54Bb9keU/fYcrR9/gruAhqXddZGiMbR7WdoVtnWbx7vL5z5r16FoskkYWMkx+dBUTvxEaqnRT1PCPS97J3KL90sRTJKzI2FZhC62t51Js7PI4MPmRl61IAl2ttAQCs=
+    secure: $PYPI_API_TOKEN
   on:
     repo: Bynder/bynder-python-sdk
     branch: stage
