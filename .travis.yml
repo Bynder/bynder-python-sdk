@@ -1,6 +1,6 @@
 language: python
 
-python: "3.6"  # or the highest if we update the python list
+python: "3.6"  # or the highest if we update the python
 
 before_install: pip install pytest-cov
 
