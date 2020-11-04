@@ -1,10 +1,6 @@
 language: python
 
-sudo: false
-
-python:
-  - "3.5"
-  - "3.6"
+python: "3.6"  # or the highest if we update the python list
 
 before_install: pip install pytest-cov
 
@@ -21,10 +17,9 @@ notifications:
 
 deploy:
   provider: pypi
-  username: __token__
+  username: "__token__"
   password:
-    secure: $PYPI_TOKEN
+    secure: "sUqwmjKcPMlSKkp5brKpOQFmk0H2gawtgigSrRtPK3E7i9iKyA4UvN+8CU9IPdKRADr7TVGbmpz0k7DFcZMHD3ZMIQwHKkAkpunWaMeCe1g69xo0/jOibGGBEfkrWwuczGWVtrRsVQCdl0Y7yWq/5tcd6p2FYFeWQjHKp/I0vrrArY6kf4qEpQ9BIJZI7ite+hToKRaSvXluwzM97wrllY0hcvICE65jXNJAdq81i4i5UPtx3eZED9mr1QGOZ2Ha7tMD8wHOC8X+D4ehP80j+GSjVLZhBZaKkYxKz0VnhiMCPNP/fUbVflDFhPmBvTmRLEI3VlFES7iolH0LaKzn45XphZFKOwpa+DPS6sQ7OtiihTmCqFrZC961jV3Fjynyk8PLdCIYgS4/k6xtOsKP/4nK+bN7WayP0bQ6HedRAzuDnwjD1sVhrEiNVdmzdpwe+cpjPe95SWIsnQuskKH5nsdhfsG8FK48YaNeRRKD5Yvg4zqM1dIs1EiI7L1jQhbO5V6qlxJ1PqvL4dD4DTMCTkxAgu365kISIstaO9AYRWbjLkJSOPwpSeb4LXJKtiXLNrzrBDQPQ1KMJTpg5IsubBH40j23W+H/OCygT2i6MPL6vTIvljoxSiEpTyeeonZwZX3Q6EQuk1lISCTSeCIloA91ibYThFs3lNuqBwOvHFo="
+  distributions: "bdist_wheel"
   on:
-    python: "3.6"  # or the highest if we update the python list
     tags: true
-    repo: Bynder/bynder-python-sdk
