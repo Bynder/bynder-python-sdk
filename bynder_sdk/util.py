@@ -1,8 +1,7 @@
-with open('VERSION') as fh:
-    SDK_VERSION = fh.read().strip()
+from bynder_sdk.version import VERSION
 
 UA_HEADER = {
-    'User-Agent': 'bynder-python-sdk/{}'.format(SDK_VERSION)
+    'User-Agent': 'bynder-python-sdk/{}'.format(VERSION)
 }
 
 
