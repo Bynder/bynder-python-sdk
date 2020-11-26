@@ -6,13 +6,14 @@ from distutils.core import Command
 
 from setuptools import find_packages, setup
 
-with open("VERSION") as fh:
-    __version__ = fh.read().strip()
+with open('bynder_sdk/version.py', 'r', encoding='utf-8') as version_file:
+    version = re.search(
+        r'VERSION = [\'"]([^\'"]+)', version_file.read(), re.MULTILINE
+    ).group(1)
 
 with open("README.md", 'r') as readme:
     LONG_DESC = readme.read()
 
-build_version = __version__
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
@@ -134,7 +135,7 @@ commands = {
 
 setup(
     name='bynder-sdk',
-    version=build_version,
+    version=version,
     description=(
         'Bynder SDK can be used to speed up the'
         ' integration of Bynder in Python'
