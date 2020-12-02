@@ -135,12 +135,11 @@ delete_media(media_id)
 create_usage(itegration_id, asset_id, query)
 usage(query)
 delete_usage(integration_id, asset_id, query)
-upload_file(file_path, brand_id, media_id, query)
+upload_file(file_path, brand_id, query)
 ```
 
 With the `upload_file` method you can do two things. You can upload a
-new asset, or you can upload a new version of an exising asset. You can
-control this by sending a media\_id or not.
+new asset, or you can upload a new version of an exising asset. 
 
 ### collection\_client:
 

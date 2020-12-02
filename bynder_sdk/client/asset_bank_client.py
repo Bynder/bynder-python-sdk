@@ -5,6 +5,7 @@ class AssetBankClient:
     """ Client used for all the operations that can be done to the
     Bynder Asset Bank.
     """
+
     def __init__(self, session):
         self.session = session
         self.upload_client = UploadClient(session)
@@ -84,7 +85,7 @@ class AssetBankClient:
         return self.session.delete('/media/usage/', params=query)
 
     def upload_file(self, file_path: str, brand_id: str,
-                    media_id: str = '', query: dict = None) -> dict:
+                    query: dict = None) -> dict:
         """ Upload file.
             Params:
                 file_path: the local filepath of the file to upload.
@@ -92,17 +93,15 @@ class AssetBankClient:
                 query: extra dict parameters of information to add to the
                        asset. (See api documentation for more information)
             Return a dict with the keys:
-                - success: boolean that indicate the result of the upload call.
-                - mediaitems: a list of mediaitems created, with at least the
-                    original.
-                - batchId: the batchId of the upload.
-                - mediaid: the mediaId update or created.
+                - file_id: an identifier for the file uploaded on the file
+                service
+                - correlation_id: #todo add the meaning here
+                - media: #todo add the meaning here
         """
         if query is None:
             query = {}
         query['brandId'] = brand_id
         return self.upload_client.upload(
             file_path=file_path,
-            media_id=media_id,
             upload_data=query
         )
