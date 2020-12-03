@@ -15,9 +15,10 @@ class UploadClient():
     def __init__(self, session):
         self.session = session
 
-    def upload(self, file_path, upload_data):
+    def upload(self, file_path, media_id, upload_data):
         """
         todo add docs
+        :param media_id:
         :param file_path:
         :param upload_data:
         :return:
@@ -25,13 +26,13 @@ class UploadClient():
         try:
             file_name = file_path.rsplit('/', 1)[-1]
             file_id = self._prepare()
-            file_sha256 = None
+            file_sha256 = ''
             with open(file_path, "rb") as f:
-                file_sha256 = sha256(f).hexdigest()
+                file_sha256 = sha256(f.read()).hexdigest()
             chunks_count, file_size = self._upload_chunks(file_path, file_id)
             correlation_id = self._finalise_file(file_id, file_name, file_size,
                                                  file_sha256, chunks_count)
-            media = self._save_media(file_id, upload_data)
+            media = self._save_media(file_id, upload_data, media_id)
             return {'file_id': file_id, 'correlation_id': correlation_id,
                     'media': media}
         except Exception as ex:
