@@ -62,14 +62,15 @@ class UploadClientTest(TestCase):
 
     def test_save_media(self):
         """ Test if when we call _save_media it will use the correct params
-        for the requests. Test both cases when the file_id is passed and
+        for the requests. Test both cases when the media_id is passed and
         when not passed.
         """
         file_id = 1111
         data = {'brandId': "89898989898-89898989-8989"}
+        media_id = "5656565656565656569-456"
         self.upload_client._save_media(file_id, data)
         self.upload_client.session.post.assert_called_with(
-            '/v4/media/{}/save/'.format(file_id), data=data)
-        self.upload_client._save_media(None, data)
+            '/v4/media/save/{}'.format(file_id), data=data)
+        self.upload_client._save_media(file_id, data, media_id)
         self.upload_client.session.post.assert_called_with(
-            '/v4/media/save', data=data)
+            '/v4/media/{}/save/{}'.format(media_id, file_id), data={})

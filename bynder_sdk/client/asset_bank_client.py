@@ -85,7 +85,7 @@ class AssetBankClient:
         return self.session.delete('/media/usage/', params=query)
 
     def upload_file(self, file_path: str, brand_id: str,
-                    query: dict = None) -> dict:
+                    media_id: str = '', query: dict = None) -> dict:
         """ Upload file.
             Params:
                 file_path: the local filepath of the file to upload.
@@ -103,5 +103,6 @@ class AssetBankClient:
         query['brandId'] = brand_id
         return self.upload_client.upload(
             file_path=file_path,
+            media_id=media_id,
             upload_data=query
         )

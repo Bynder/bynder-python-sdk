@@ -1,5 +1,6 @@
 import math
 import os
+from hashlib import sha256
 
 MAX_CHUNK_SIZE = 1024 * 1024 * 5
 MAX_POLLING_ITERATIONS = 60
@@ -68,17 +69,24 @@ class UploadClient():
                 file_size / MAX_CHUNK_SIZE)
             chunk_nr = 0
             for chunk in self._read_in_chunks(f):
-                upload_chunk_endpoint = '/v7/file_cmds/upload/{}/chunk/{'\
-                                        '}'.format(file_id, chunk_nr)
-                self.session.post(
-                    upload_chunk_endpoint,
-                    # each chunk sent here
-                    data=chunk,
-                    is_fs_endpoint=True
-                )
+                self._upload_chunk(file_id, chunk, chunk_nr)
                 chunk_nr = chunk_nr + 1
 
         return chunks_count, file_size
+
+    def _upload_chunk(self, file_id, data, chunk_nr):
+        upload_chunk_endpoint = '/v7/file_cmds/upload/{}/chunk/{' \
+                                '}'.format(file_id, chunk_nr)
+        content_sha256 = {
+            'content-sha256': '{}'.format(sha256(data).hexdigest())
+        }
+        self.session.headers.update(content_sha256)
+        self.session.post(
+            upload_chunk_endpoint,
+            # each chunk sent here
+            data=data,
+            is_fs_endpoint=True
+        )
 
     def _finalise_file(self, file_id, file_name, file_size, chunks_count):
         # todo complete this doc
@@ -99,14 +107,17 @@ class UploadClient():
         correlation_id = response.headers['x-api-correlation-id']
         return correlation_id
 
-    def _save_media(self, file_id, data):
+    def _save_media(self, file_id, data, media_id=None):
         """
-        todo add doc
+         todo add docs
         :param file_id:
         :param data:
+        :param media_id:
         :return:
         """
-        save_media_endpoint = '/v4/media/save'
-        if file_id:
-            save_media_endpoint = '/v4/media/{}/save/'.format(file_id)
-        return self.session.post(save_media_endpoint, data=data)
+        save_endpoint = '/v4/media/save/{}'.format(file_id)
+        if media_id:
+            save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
+                                                           file_id)
+            data = {}
+        return self.session.post(save_endpoint, data=data)
