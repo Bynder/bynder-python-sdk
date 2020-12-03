@@ -89,14 +89,14 @@ class AssetBankClient:
         """ Upload file.
             Params:
                 file_path: the local filepath of the file to upload.
-                brand_id: the brandid of the brand that belong the asset.
+                brand_id: the brand id of the brand that belong the asset.
                 query: extra dict parameters of information to add to the
                        asset. (See api documentation for more information)
             Return a dict with the keys:
                 - file_id: an identifier for the file uploaded on the file
                 service
-                - correlation_id: #todo add the meaning here
-                - media: #todo add the meaning here
+                - correlation_id: the correlation_id of save media request.
+                - media: a dict containing save media related info
         """
         if query is None:
             query = {}

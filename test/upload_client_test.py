@@ -13,6 +13,7 @@ class UploadClientTest(TestCase):
         self.upload_client = self.bynder_client.upload_client
         self.upload_client.session.get = mock.MagicMock()
         self.upload_client.session.post = mock.MagicMock()
+        self.upload_client.file_sha256 = 'random-hex-digest'
 
     def tearDown(self):
         self.bynder_client = None
@@ -48,9 +49,8 @@ class UploadClientTest(TestCase):
         file_name = 'image.png'
         file_size = 4000
         chunks_count = 1
-        file_sha256 = "random-hex-digest"
         self.upload_client._finalise_file(file_id, file_name, file_size,
-                                          file_sha256, chunks_count)
+                                          chunks_count)
         self.upload_client.session.post.assert_called_with(
             '/v7/file_cmds/upload/{}/finalise'.format(file_id),
             need_response_json=False,
@@ -59,7 +59,7 @@ class UploadClientTest(TestCase):
                 'fileName': file_name,
                 'fileSize': file_size,
                 'chunksCount': chunks_count,
-                'sha256': file_sha256,
+                'sha256': self.upload_client.file_sha256,
                 'intent': 'upload_main_uploader_asset'
             })
 
