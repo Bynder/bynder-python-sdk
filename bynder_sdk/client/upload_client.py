@@ -68,9 +68,8 @@ class UploadClient():
                 file_size / MAX_CHUNK_SIZE)
             chunk_nr = 0
             for chunk in self._read_in_chunks(f):
-                upload_chunk_endpoint = '/v7/file_cmds/upload/{}/chunk/{' \
-                                        '}'.format(
-                    file_id, chunk_nr)
+                upload_chunk_endpoint = '/v7/file_cmds/upload/{}/chunk/{'\
+                                        '}'.format(file_id, chunk_nr)
                 self.session.post(
                     upload_chunk_endpoint,
                     # each chunk sent here
