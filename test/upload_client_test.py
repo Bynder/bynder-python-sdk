@@ -48,8 +48,9 @@ class UploadClientTest(TestCase):
         file_name = 'image.png'
         file_size = 4000
         chunks_count = 1
+        file_sha256 = "random-hex-digest"
         self.upload_client._finalise_file(file_id, file_name, file_size,
-                                          chunks_count)
+                                          file_sha256, chunks_count)
         self.upload_client.session.post.assert_called_with(
             '/v7/file_cmds/upload/{}/finalise'.format(file_id),
             need_response_json=False,
@@ -57,7 +58,9 @@ class UploadClientTest(TestCase):
             data={
                 'fileName': file_name,
                 'fileSize': file_size,
-                'chunksCount': chunks_count
+                'chunksCount': chunks_count,
+                'sha256': file_sha256,
+                'intent': 'upload_main_uploader_asset'
             })
 
     def test_save_media(self):

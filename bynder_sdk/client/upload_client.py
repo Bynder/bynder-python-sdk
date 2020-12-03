@@ -25,9 +25,12 @@ class UploadClient():
         try:
             file_name = file_path.rsplit('/', 1)[-1]
             file_id = self._prepare()
+            file_sha256 = None
+            with open(file_path, "rb") as f:
+                file_sha256 = sha256(f).hexdigest()
             chunks_count, file_size = self._upload_chunks(file_path, file_id)
             correlation_id = self._finalise_file(file_id, file_name, file_size,
-                                                 chunks_count)
+                                                 file_sha256, chunks_count)
             media = self._save_media(file_id, upload_data)
             return {'file_id': file_id, 'correlation_id': correlation_id,
                     'media': media}
@@ -88,7 +91,8 @@ class UploadClient():
             is_fs_endpoint=True
         )
 
-    def _finalise_file(self, file_id, file_name, file_size, chunks_count):
+    def _finalise_file(self, file_id, file_name, file_size, file_sha256,
+                       chunks_count):
         # todo complete this doc
         """ Finalises a completely uploaded file.
         """
@@ -100,7 +104,10 @@ class UploadClient():
             data={
                 'fileName': file_name,
                 'fileSize': file_size,
-                'chunksCount': chunks_count},
+                'chunksCount': chunks_count,
+                "sha256": file_sha256,
+                "intent": "upload_main_uploader_asset",
+            },
             is_fs_endpoint=True
         )
 
@@ -118,6 +125,6 @@ class UploadClient():
         save_endpoint = '/v4/media/save/{}'.format(file_id)
         if media_id:
             save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
-                                                           file_id)
+                                                          file_id)
             data = {}
         return self.session.post(save_endpoint, data=data)

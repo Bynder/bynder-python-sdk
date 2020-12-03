@@ -183,5 +183,6 @@ class AssetBankClientTest(TestCase):
             file_path=file_path, brand_id=brand_id)
         self.asset_bank_client.upload_client.upload.assert_called_with(
             file_path=file_path,
+            media_id='',
             upload_data={'brandId': brand_id}
         )
