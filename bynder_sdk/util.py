@@ -19,6 +19,7 @@ def parse_json_for_response(response):
 
 
 class SessionMixin:
+    # pylint:disable=keyword-arg-before-vararg
     def wrapped_request(self, func, endpoint, need_response_json=True,
                         is_fs_endpoint=False, *args,
                         **kwargs):
