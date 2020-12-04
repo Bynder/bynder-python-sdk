@@ -5,10 +5,10 @@ UA_HEADER = {
 }
 
 
-def api_endpoint_url(session, endpoint, is_fs_endpoint=False):
-    if is_fs_endpoint:
-        return 'https://{}{}'.format(session.bynder_domain, endpoint)
-    return 'https://{}/api{}'.format(session.bynder_domain, endpoint)
+def api_endpoint_url(session, endpoint):
+    if endpoint.startswith('/v4'):
+        return 'https://{}/api{}'.format(session.bynder_domain, endpoint)
+    return 'https://{}{}'.format(session.bynder_domain, endpoint)
 
 
 def parse_json_for_response(response):
@@ -22,9 +22,7 @@ class SessionMixin:
     # pylint:disable=keyword-arg-before-vararg
     def wrapped_request(self, func, endpoint, *args, **kwargs):
         need_response_json = kwargs.pop("need_response_json", True)
-        is_fs_endpoint = kwargs.pop("is_fs_endpoint", False)
-        endpoint = api_endpoint_url(self, endpoint,
-                                    is_fs_endpoint=is_fs_endpoint)
+        endpoint = api_endpoint_url(self, endpoint)
         response = func(endpoint, *args, **kwargs)
         response.raise_for_status()
         if not need_response_json:
@@ -36,14 +34,12 @@ class SessionMixin:
 
     def post(self, url, *args, **kwargs):
         need_response_json = kwargs.pop("need_response_json", True)
-        is_fs_endpoint = kwargs.pop("is_fs_endpoint", False)
         if url.startswith('https'):
             # Do not send the Authorization header to S3
             kwargs['headers'] = {'Authorization': None}
             return super().post(url, *args, **kwargs)
         return self.wrapped_request(super().post, url,
                                     need_response_json=need_response_json,
-                                    is_fs_endpoint=is_fs_endpoint,
                                     *args,
                                     **kwargs)
 

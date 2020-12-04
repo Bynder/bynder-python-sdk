@@ -27,15 +27,16 @@ class UploadClientTest(TestCase):
         """
         self.upload_client._prepare()
         self.upload_client.session.post.assert_called_with(
-            '/v7/file_cmds/upload/prepare', is_fs_endpoint=True
+            '/v7/file_cmds/upload/prepare'
         )
 
     def test_upload_chunks(self):
         """ Test if when we call _upload_chunks it will use the correct params
         for the requests. Also test the chunks_count returned.
         """
-        file_path = '{}/resources/image.png'.format(os.getcwd())
-        print(file_path)
+        # for running this locally change file_path to '{
+        # }/resources/image.png'.format(os.getcwd())
+        file_path = '{}/test/resources/image.png'.format(os.getcwd())
         file_id = 1111
         chunks_count, file_size = \
             self.upload_client._upload_chunks(
@@ -56,7 +57,6 @@ class UploadClientTest(TestCase):
         self.upload_client.session.post.assert_called_with(
             '/v7/file_cmds/upload/{}/finalise'.format(file_id),
             need_response_json=False,
-            is_fs_endpoint=True,
             data={
                 'fileName': file_name,
                 'fileSize': file_size,

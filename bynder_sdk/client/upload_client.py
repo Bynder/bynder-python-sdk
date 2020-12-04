@@ -38,7 +38,7 @@ class UploadClient():
                 - media: a dict containing save media related info.
         """
         try:
-            file_name = file_path.rsplit('/', 1)[-1]
+            _, file_name = os.path.split(file_path)
             file_id = self._prepare()
             with open(file_path, "rb") as f:
                 self.file_sha256 = sha256(f.read()).hexdigest()
@@ -56,11 +56,8 @@ class UploadClient():
         file_id.
         :return: A uuid4 that can be used to identify the file to be uploaded.
         """
-        response = self.session.post('/v7/file_cmds/upload/prepare',
-                                     is_fs_endpoint=True
-                                     )
-        file_id = response["file_id"]
-        return file_id
+        response = self.session.post('/v7/file_cmds/upload/prepare')
+        return response["file_id"]
 
     def _upload_chunks(self, file_path, file_id):
         """Upload the file in chunks of MAX_CHUNK_SIZE.
@@ -93,8 +90,7 @@ class UploadClient():
         self.session.headers.update(content_sha256)
         self.session.post(
             upload_chunk_endpoint,
-            data=data,
-            is_fs_endpoint=True
+            data=data
         )
 
     def _finalise_file(self, file_id, file_name, file_size, chunks_count):
@@ -106,7 +102,7 @@ class UploadClient():
         uploaded.
         :return: The correlation_id of save media request.
         """
-        finalise_endpoint = '/v7/file_cmds/upload/{}/finalise'.format(
+        finalise_endpoint = '/v7/file_cmds/upload/{}/finalise_api'.format(
             file_id)
 
         response = self.session.post(
@@ -117,8 +113,7 @@ class UploadClient():
                 'chunksCount': chunks_count,
                 "sha256": self.file_sha256,
                 "intent": "upload_main_uploader_asset",
-            },
-            is_fs_endpoint=True
+            }
         )
 
         correlation_id = response.headers['x-api-correlation-id']
