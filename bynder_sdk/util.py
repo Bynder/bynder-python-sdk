@@ -20,9 +20,9 @@ def parse_json_for_response(response):
 
 class SessionMixin:
     # pylint:disable=keyword-arg-before-vararg
-    def wrapped_request(self, func, endpoint, need_response_json=True,
-                        is_fs_endpoint=False, *args,
-                        **kwargs):
+    def wrapped_request(self, func, endpoint, *args, **kwargs):
+        need_response_json = kwargs.pop("need_response_json", True)
+        is_fs_endpoint = kwargs.pop("is_fs_endpoint", False)
         endpoint = api_endpoint_url(self, endpoint,
                                     is_fs_endpoint=is_fs_endpoint)
         response = func(endpoint, *args, **kwargs)
@@ -34,8 +34,9 @@ class SessionMixin:
     def get(self, url, *args, **kwargs):
         return self.wrapped_request(super().get, url, *args, **kwargs)
 
-    def post(self, url, need_response_json=True,
-             is_fs_endpoint=False, *args, **kwargs):
+    def post(self, url, *args, **kwargs):
+        need_response_json = kwargs.pop("need_response_json", True)
+        is_fs_endpoint = kwargs.pop("is_fs_endpoint", False)
         if url.startswith('https'):
             # Do not send the Authorization header to S3
             kwargs['headers'] = {'Authorization': None}
