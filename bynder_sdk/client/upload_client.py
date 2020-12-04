@@ -18,7 +18,7 @@ def _read_in_chunks(file_object, chunk_size=MAX_CHUNK_SIZE):
 
 
 # pylint: disable-msg=too-few-public-methods
-class UploadClient():
+class UploadClient:
     """ Client to upload asset to Bynder.
     """
     file_sha256 = ''
@@ -74,22 +74,15 @@ class UploadClient():
             file_size = os.stat(f.fileno()).st_size
             chunks_count = math.ceil(
                 file_size / MAX_CHUNK_SIZE)
-            chunk_nr = 0
-            for chunk in _read_in_chunks(f):
+            for chunk_nr, chunk in enumerate(_read_in_chunks(f)):
                 self._upload_chunk(file_id, chunk, chunk_nr)
-                chunk_nr = chunk_nr + 1
 
         return chunks_count, file_size
 
     def _upload_chunk(self, file_id, data, chunk_nr):
-        upload_chunk_endpoint = '/v7/file_cmds/upload/{}/chunk/{' \
-                                '}'.format(file_id, chunk_nr)
-        content_sha256 = {
-            'content-sha256': '{}'.format(sha256(data).hexdigest())
-        }
-        self.session.headers.update(content_sha256)
+        self.session.headers['content-sha256'] = sha256(data).hexdigest()
         self.session.post(
-            upload_chunk_endpoint,
+            '/v7/file_cmds/upload/{}/chunk/{}'.format(file_id, chunk_nr),
             data=data
         )
 
