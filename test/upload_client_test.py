@@ -55,7 +55,9 @@ class UploadClientTest(TestCase):
                 file_path, file_id)
         self.assertEqual(chunks_count, 1)
         self.upload_client.session.post.assert_called_with(
-            '/v7/file_cmds/upload/1111/chunk/0', data=file_data)
+            '/v7/file_cmds/upload/{}/chunk/{}'.format(file_id,
+                                                      chunks_count - 1),
+            data=file_data)
 
     def test_finalise_file(self):
         """ Test if when we call _finalise_file it will use the correct params
