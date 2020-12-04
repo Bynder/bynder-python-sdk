@@ -1,7 +1,17 @@
+import fnmatch
 import os
 from unittest import mock, TestCase
 
 from test import create_bynder_client
+
+
+def _find_file_helper(pattern, path):
+    result = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if fnmatch.fnmatch(name, pattern):
+                result.append(os.path.join(root, name))
+    return result[0]
 
 
 class UploadClientTest(TestCase):
@@ -34,15 +44,18 @@ class UploadClientTest(TestCase):
         """ Test if when we call _upload_chunks it will use the correct params
         for the requests. Also test the chunks_count returned.
         """
-        # for running this locally change file_path to '{
-        # }/resources/image.png'.format(os.getcwd())
-        file_path = '{}/test/resources/image.png'.format(os.getcwd())
+        file_path = _find_file_helper('test_upload_image.png',
+                                      os.getcwd())
         file_id = 1111
+        file_data = None
+        with open(file_path, "rb") as f:
+            file_data = f.read()
         chunks_count, file_size = \
             self.upload_client._upload_chunks(
                 file_path, file_id)
         self.assertEqual(chunks_count, 1)
-        self.upload_client.session.post.assert_called()
+        self.upload_client.session.post.assert_called_with(
+            '/v7/file_cmds/upload/1111/chunk/0', data=file_data)
 
     def test_finalise_file(self):
         """ Test if when we call _finalise_file it will use the correct params
@@ -55,7 +68,7 @@ class UploadClientTest(TestCase):
         self.upload_client._finalise_file(file_id, file_name, file_size,
                                           chunks_count)
         self.upload_client.session.post.assert_called_with(
-            '/v7/file_cmds/upload/{}/finalise'.format(file_id),
+            '/v7/file_cmds/upload/{}/finalise_api'.format(file_id),
             need_response_json=False,
             data={
                 'fileName': file_name,
