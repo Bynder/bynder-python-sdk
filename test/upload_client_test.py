@@ -1,3 +1,4 @@
+import os
 from unittest import mock, TestCase
 
 from test import create_bynder_client
@@ -33,7 +34,8 @@ class UploadClientTest(TestCase):
         """ Test if when we call _upload_chunks it will use the correct params
         for the requests. Also test the chunks_count returned.
         """
-        file_path = 'resources/image.png'
+        file_path = '{}/resources/image.png'.format(os.getcwd())
+        print(file_path)
         file_id = 1111
         chunks_count, file_size = \
             self.upload_client._upload_chunks(
