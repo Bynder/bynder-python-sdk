@@ -71,7 +71,6 @@ class UploadClientTest(TestCase):
                                           chunks_count)
         self.upload_client.session.post.assert_called_with(
             '/v7/file_cmds/upload/{}/finalise_api'.format(file_id),
-            need_response_json=False,
             data={
                 'fileName': file_name,
                 'fileSize': file_size,
