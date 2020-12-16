@@ -134,7 +134,7 @@ commands = {
 }
 
 setup(
-    name='bynder-sdk-with-github-actions',
+    name='bynder-sdk',
     version=version,
     description=(
         'Bynder SDK can be used to speed up the'
