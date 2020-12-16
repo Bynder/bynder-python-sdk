@@ -1,4 +1,4 @@
-# This workflows will run tests for python versions specified and
+# This workflow will run tests for python versions specified and
 # then upload the Python SDK using Twine when a release is created
 
 name: Publish SDK to PyPi

@@ -1,4 +1,4 @@
-# This workflows will run tests for python versions specified on a PR creation and a push to master
+# This workflow will run tests for python versions specified on a PR creation and a push to master
 
 name: Run Tests
 
