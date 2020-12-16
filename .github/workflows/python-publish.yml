@@ -26,7 +26,7 @@ jobs:
       run: |
         pip install pytest-cov
         pip install -e .
-        make tests
+        make test
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
