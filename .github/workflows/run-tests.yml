@@ -1,6 +1,6 @@
 # This workflow will run tests for python versions specified on a PR creation and a push to master
 
-name: Run Tests
+name: Tests
 
 on:
   push:
@@ -28,6 +28,4 @@ jobs:
           python -m pip install --upgrade pip
       - name: Run tests
         run: |
-          pip install pytest-cov
-          pip install -e .
           make test

@@ -1,7 +1,7 @@
 # This workflow will run tests for python versions specified and
 # then upload the Python SDK using Twine when a release is created
 
-name: Publish SDK to PyPi
+name: Publish
 
 on:
   release:
@@ -27,8 +27,6 @@ jobs:
           python -m pip install --upgrade pip
       - name: Run tests
         run: |
-          pip install pytest-cov
-          pip install -e .
           make test
 
   deploy:
