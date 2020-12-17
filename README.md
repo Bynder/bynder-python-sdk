@@ -1,8 +1,8 @@
 Bynder Python SDK
 =================
 
-![Tests](https://github.com/Arpit-Sharma-USC/bynder-python-sdk/workflows/Tests/badge.svg)
-![Publish](https://github.com/Arpit-Sharma-USC/bynder-python-sdk/workflows/Publish/badge.svg)
+![Tests](https://github.com/Bynder/bynder-python-sdk/workflows/Tests/badge.svg)
+![Publish](https://github.com/Bynder/bynder-python-sdk/workflows/Publish/badge.svg)
 
 The main goal of this SDK is to speed up the integration of Bynder
 customers who use Python. Making it easier to connect to the Bynder API
