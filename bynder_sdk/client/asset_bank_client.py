@@ -93,10 +93,11 @@ class AssetBankClient:
                 query: extra dict parameters of information to add to the
                        asset. (See api documentation for more information)
             Return a dict with the keys:
-                - file_id: an identifier for the file uploaded on the file
-                service
-                - correlation_id: the correlation_id of save media request.
-                - media: a dict containing save media related info
+                - success: boolean that indicate the result of the upload call.
+                - mediaitems: a list of mediaitems created, with at least the
+                    original.
+                - batchId: the batchId of the upload.
+                - mediaid: the mediaId update or created.
         """
         if query is None:
             query = {}

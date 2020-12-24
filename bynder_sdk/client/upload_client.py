@@ -30,12 +30,14 @@ class UploadClient:
         """Handles the upload of the file.
         :param media_id: The media_id of the asset to be created or updated.
         :param file_path: The path of the asset to be uploaded.
-        :param upload_data: The upload_data containing brand_id that can be
-        used in the save media endpoint.
+        :param upload_data: The upload_data containing asset information
+        that can be used in the save media endpoint.
         :return: A dict with the keys:
-                - file_id: an identifier for the file uploaded
-                - correlation_id: The correlation_id of save media request.
-                - media: a dict containing save media related info.
+                - success: boolean that indicate the result of the upload call.
+                - mediaitems: a list of mediaitems created, with at least the
+                    original.
+                - batchId: the batchId of the upload.
+                - mediaid: the mediaId update or created.
         """
         try:
             _, file_name = os.path.split(file_path)
@@ -43,11 +45,9 @@ class UploadClient:
             with open(file_path, "rb") as f:
                 self.file_sha256 = sha256(f.read()).hexdigest()
             chunks_count, file_size = self._upload_chunks(file_path, file_id)
-            correlation_id = self._finalise_file(file_id, file_name, file_size,
-                                                 chunks_count)
-            media = self._save_media(file_id, upload_data, media_id)
-            return {'file_id': file_id, 'correlation_id': correlation_id,
-                    'media': media}
+            self._finalise_file(file_id, file_name, file_size, chunks_count)
+            return self._save_media(file_id, upload_data, media_id)
+
         except Exception as ex:
             return {'Message': 'Unable to upload the file.', 'Error': ex}
 
@@ -106,13 +106,10 @@ class UploadClient:
             }
         )
 
-        correlation_id = response.headers['x-api-correlation-id']
-        return correlation_id
-
     def _save_media(self, file_id, data, media_id=None):
         """Saves the completely uploaded file.
         :param file_id: The uuid4 used to identify the file to be uploaded.
-        :param data: The upload_data containing brand_id.
+        :param data: The upload_data containing asset information.
         :param media_id: The media_id of the asset to be created or updated.
         :return: - success: boolean that indicate the result of the upload
         call.
@@ -121,9 +118,12 @@ class UploadClient:
                 - batchId: the batchId of the upload.
                 - mediaId: the mediaId update or created.
         """
-        save_endpoint = '/v4/media/save/{}'.format(file_id)
-        if media_id:
-            save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
-                                                          file_id)
-            data = {}
-        return self.session.post(save_endpoint, data=data)
+        if data['brandId'] and data['brandId'].strip():
+            save_endpoint = '/v4/media/save/{}'.format(file_id)
+            if media_id:
+                save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
+                                                              file_id)
+                data = {}
+            return self.session.post(save_endpoint, data=data)
+        else:
+            raise Exception('Invalid or empty brandId')

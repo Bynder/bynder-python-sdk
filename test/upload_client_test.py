@@ -93,3 +93,12 @@ class UploadClientTest(TestCase):
         self.upload_client._save_media(file_id, data, media_id)
         self.upload_client.session.post.assert_called_with(
             '/v4/media/{}/save/{}'.format(media_id, file_id), data={})
+
+    def test_save_media_exception(self):
+        """ Test if when we call _save_media with an invalid brandId whether
+        the exception is raised or not.
+        """
+        file_id = 1111
+        media_id = "5656565656565656569-456"
+        with self.assertRaises(Exception):
+            self.upload_client._save_media(file_id, {'brandId': ''}, media_id)
