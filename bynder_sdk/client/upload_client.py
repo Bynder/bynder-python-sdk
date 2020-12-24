@@ -125,5 +125,4 @@ class UploadClient:
                                                               file_id)
                 data = {}
             return self.session.post(save_endpoint, data=data)
-        else:
-            raise Exception('Invalid or empty brandId')
+        raise Exception('Invalid or empty brandId')
