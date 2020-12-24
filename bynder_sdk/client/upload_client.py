@@ -93,7 +93,6 @@ class UploadClient:
         :param file_size: The size of the file to be uploaded.
         :param chunks_count: The number of chunks in which the file was
         uploaded.
-        :return: The correlation_id of save media request.
         """
         self.session.post(
             '/v7/file_cmds/upload/{}/finalise_api'.format(file_id),
