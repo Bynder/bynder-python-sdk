@@ -89,7 +89,8 @@ class AssetBankClient:
         """ Upload file.
             Params:
                 file_path: the local filepath of the file to upload.
-                brand_id: the brand id of the brand that belong the asset.
+                brand_id: the brand id of the brand that the asset is mapped
+                to.
                 query: extra dict parameters of information to add to the
                        asset. (See api documentation for more information)
             Return a dict with the keys:
