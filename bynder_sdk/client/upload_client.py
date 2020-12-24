@@ -95,7 +95,7 @@ class UploadClient:
         uploaded.
         :return: The correlation_id of save media request.
         """
-        response = self.session.post(
+        self.session.post(
             '/v7/file_cmds/upload/{}/finalise_api'.format(file_id),
             data={
                 'fileName': file_name,
