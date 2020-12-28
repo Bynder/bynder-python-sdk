@@ -99,6 +99,5 @@ class UploadClientTest(TestCase):
         the exception is raised or not.
         """
         file_id = 1111
-        media_id = "5656565656565656569-456"
         with self.assertRaises(Exception):
-            self.upload_client._save_media(file_id, {'brandId': ''}, media_id)
+            self.upload_client._save_media(file_id, {'brandId': ''})

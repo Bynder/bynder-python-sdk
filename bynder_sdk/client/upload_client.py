@@ -117,11 +117,16 @@ class UploadClient:
                 - batchId: the batchId of the upload.
                 - mediaId: the mediaId update or created.
         """
+        # If the media_id is present, save the file as a new version of an
+        # existing asset.
+        if media_id:
+            save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
+                                                          file_id)
+            data = {}
+            return self.session.post(save_endpoint, data=data)
+        # If the mediaId is missing then save the file as a new asset in
+        # which case a brandId must be specified.
         if data['brandId'] and data['brandId'].strip():
             save_endpoint = '/v4/media/save/{}'.format(file_id)
-            if media_id:
-                save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
-                                                              file_id)
-                data = {}
             return self.session.post(save_endpoint, data=data)
         raise Exception('Invalid or empty brandId')
