@@ -1,0 +1,27 @@
+# This workflow will run tests for python versions specified on a PR creation and a push to master
+
+name: Tests
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ 3.5, 3.6, 3.7, 3.8, 3.9 ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+      - name: Run tests
+        run: |
+          make test
