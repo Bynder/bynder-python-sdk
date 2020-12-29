@@ -1,6 +1,8 @@
 Bynder Python SDK
 =================
 
+A test
+
 ![Tests](https://github.com/Bynder/bynder-python-sdk/workflows/Tests/badge.svg)
 ![Publish](https://github.com/Bynder/bynder-python-sdk/workflows/Publish/badge.svg)
 
