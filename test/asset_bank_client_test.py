@@ -6,6 +6,7 @@ from test import create_bynder_client
 class AssetBankClientTest(TestCase):
     """ Test the Asset Bank client.
     """
+
     def setUp(self):
         self.bynder_client = create_bynder_client()
 
@@ -49,7 +50,8 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_meta_properties(self):
-        """ Test if when we call meta_properties it will use the correct params for the
+        """ Test if when we call meta_properties it will use the correct
+        params for the
         request and returns successfully.
         """
         self.asset_bank_client.meta_properties()
@@ -59,7 +61,8 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_media_list(self):
-        """ Test if when we call media_list it will use the correct params for the
+        """ Test if when we call media_list it will use the correct params
+        for the
         request and returns successfully.
         """
         self.asset_bank_client.media_list()
@@ -82,7 +85,8 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_media_info(self):
-        """ Test if when we call media_info it will use the correct params for the
+        """ Test if when we call media_info it will use the correct params
+        for the
         request and returns successfully.
         """
         self.asset_bank_client.media_info(media_id=1111)
@@ -92,7 +96,8 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_download_url(self):
-        """ Test if when we call download_url it will use the correct params for the
+        """ Test if when we call download_url it will use the correct params
+        for the
         request and returns successfully.
         """
         self.asset_bank_client.media_download_url(media_id=1111)
@@ -112,15 +117,17 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_delete_media(self):
-        """ Test if when we call delete_media it will use the correct params for the
+        """ Test if when we call delete_media it will use the correct params
+        for the
         request and returns successfully.
         """
         self.asset_bank_client.delete_media(media_id=1111)
-        self.asset_bank_client.session\
+        self.asset_bank_client.session \
             .delete.assert_called_with('/v4/media/1111/')
 
     def test_create_usage(self):
-        """ Test if when we call create_usage it will use the correct params for the
+        """ Test if when we call create_usage it will use the correct params
+        for the
         request and returns successfully.
         """
         payload = {
@@ -137,7 +144,8 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_get_usage(self):
-        """ Test if when we call get_usage it will use the correct params for the
+        """ Test if when we call get_usage it will use the correct params
+        for the
         request and returns successfully.
         """
         self.asset_bank_client.usage()
@@ -146,7 +154,8 @@ class AssetBankClientTest(TestCase):
         )
 
     def test_delete_usage(self):
-        """ Test if when we call delete_usage it will use the correct params for the
+        """ Test if when we call delete_usage it will use the correct params
+        for the
         request and returns successfully.
         """
         payload = {
@@ -164,7 +173,8 @@ class AssetBankClientTest(TestCase):
             )
 
     def test_upload_file(self):
-        """ Test if when we call upload_file it will use the correct params for the
+        """ Test if when we call upload_file it will use the correct params
+        for the
         requests.
         """
         file_path = 'path_to_a_file.png'

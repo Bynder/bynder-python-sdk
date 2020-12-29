@@ -7,6 +7,7 @@ from test import create_bynder_client
 class CollectionClientTest(TestCase):
     """ Test the collection client.
     """
+
     def setUp(self):
         self.bynder_client = create_bynder_client()
 
@@ -20,7 +21,8 @@ class CollectionClientTest(TestCase):
         self.collection_client = None
 
     def test_collections(self):
-        """ Test if when we call collections it will use the correct params for the
+        """ Test if when we call collections it will use the correct params
+        for the
         request and returns successfully.
         """
         self.collection_client.collections()
@@ -30,7 +32,8 @@ class CollectionClientTest(TestCase):
         )
 
     def test_collection_info(self):
-        """ Test if when we call collection info it will use the correct params for the
+        """ Test if when we call collection info it will use the correct
+        params for the
         request and returns successfully.
         """
         self.collection_client.collection_info(collection_id=1111)
@@ -56,7 +59,7 @@ class CollectionClientTest(TestCase):
         params for the request and returns successfully.
         """
         self.collection_client.delete_collection(collection_id=1111)
-        self.collection_client.session.delete\
+        self.collection_client.session.delete \
             .assert_called_with('/v4/collections/1111/')
 
     def test_collection_media_ids(self):
@@ -69,7 +72,8 @@ class CollectionClientTest(TestCase):
         )
 
     def test_add_media_to_collection(self):
-        """ Test if when we call add media to collection it will use the correct
+        """ Test if when we call add media to collection it will use the
+        correct
         params for the request and returns successfully.
         """
         media_ids = ['2222', '3333']
@@ -81,7 +85,8 @@ class CollectionClientTest(TestCase):
         )
 
     def test_remove_media_from_collection(self):
-        """ Test if when we call remove media from collection it will use the correct
+        """ Test if when we call remove media from collection it will use
+        the correct
         params for the request and returns successfully.
         """
         media_ids = ['2222', '3333']

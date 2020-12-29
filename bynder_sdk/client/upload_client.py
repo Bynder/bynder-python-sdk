@@ -1,144 +1,131 @@
 import math
 import os
-import time
-
+from hashlib import sha256
 
 MAX_CHUNK_SIZE = 1024 * 1024 * 5
 MAX_POLLING_ITERATIONS = 60
 POLLING_IDLE_TIME = 5
 
 
+def _read_in_chunks(file_object, chunk_size=MAX_CHUNK_SIZE):
+    """Lazy function (generator) to read a file piece by piece.
+    Default chunk size: MAX_CHUNK_SIZE."""
+    while True:
+        data = file_object.read(chunk_size)
+        if not data:
+            break
+        yield data
+
+
 # pylint: disable-msg=too-few-public-methods
-class UploadClient():
+class UploadClient:
     """ Client to upload asset to Bynder.
     """
+    file_sha256 = ''
+
     def __init__(self, session):
         self.session = session
 
     def upload(self, file_path, media_id, upload_data):
-        """ Handles the upload of the file.
+        """Handles the upload of the file.
+        :param media_id: The media_id of the asset to be created or updated.
+        :param file_path: The path of the asset to be uploaded.
+        :param upload_data: The upload_data containing asset information
+        that can be used in the save media endpoint.
+        :return: A dict with the keys:
+                - success: boolean that indicate the result of the upload call.
+                - mediaitems: a list of mediaitems created, with at least the
+                    original.
+                - batchId: the batchId of the upload.
+                - mediaid: the mediaId update or created.
         """
-        init_data, total_parts = self._run_s3_upload(file_path)
-        finalise_data = self._finalise_file(init_data, total_parts)
-        return self._save_media(finalise_data['importId'],
-                                upload_data, media_id)
+        try:
+            _, file_name = os.path.split(file_path)
+            file_id = self._prepare()
+            with open(file_path, "rb") as f:
+                self.file_sha256 = sha256(f.read()).hexdigest()
+            chunks_count, file_size = self._upload_chunks(file_path, file_id)
+            self._finalise_file(file_id, file_name, file_size, chunks_count)
+            return self._save_media(file_id, upload_data, media_id)
 
-    def _run_s3_upload(self, file_path):
-        """ Uploads the media to Amazon S3 bucket-endpoint.
+        except Exception as ex:
+            return {'Message': 'Unable to upload the file.', 'Error': ex}
+
+    def _prepare(self):
+        """Initializes and prepares the file for upload by generating a
+        file_id.
+        :return: A uuid4 that can be used to identify the file to be uploaded.
         """
-        with open(file_path, 'rb') as f:
-            part_nr = 0
-            total_parts = math.ceil(
-                os.stat(f.fileno()).st_size / MAX_CHUNK_SIZE)
+        response = self.session.post('/v7/file_cmds/upload/prepare')
+        return response["file_id"]
 
-            filename = file_path.rsplit('/', 1)[-1]
-            build_part_data = self._init_upload(filename, total_parts)
-
-            part_bytes = f.read(MAX_CHUNK_SIZE)
-            while part_bytes:
-                part_nr = part_nr + 1
-                part_data = build_part_data(part_nr)
-
-                response = self.session.post(
-                    self.upload_url,
-                    files={'file': part_bytes},
-                    data=part_data['multipart_params'],
-                )
-                response.raise_for_status()
-                self._register_part(part_data, part_nr)
-                part_bytes = f.read(MAX_CHUNK_SIZE)
-
-        return part_data, total_parts
-
-    def _init_upload(self, filename, total_parts):
-        """ Gets the URL of the Amazon S3 bucket-endpoint in the region
-        closest to the server and initialises a file upload with Bynder
-        and returns authorisation information to allow uploading to the
-        Amazon S3 bucket-endpoint.
+    def _upload_chunks(self, file_path, file_id):
+        """Upload the file in chunks of MAX_CHUNK_SIZE.
+        :param file_path: The path of the asset to be uploaded.
+        :param file_id: The uuid4 used to identify the file to be uploaded.
+        :return:
+            - chunks_count: The number of chunks in which the file is to
+        be uploaded.
+            - file_size: The size of the file to be uploaded.
         """
-        self.upload_url = self.session.get('/upload/endpoint/')
+        chunks_count = 0
+        file_size = 0
+        with open(file_path, "rb") as f:
+            file_size = os.stat(f.fileno()).st_size
+            chunks_count = math.ceil(
+                file_size / MAX_CHUNK_SIZE)
+            for chunk_nr, chunk in enumerate(_read_in_chunks(f)):
+                self._upload_chunk(file_id, chunk, chunk_nr)
 
-        data = self.session.post(
-            '/upload/init/',
-            data={'filename': filename}
-        )
-        data['multipart_params'].update({
-            'chunks': total_parts,
-            'name': filename,
-        })
+        return chunks_count, file_size
 
-        key = '{}/p{{}}'.format(data['s3_filename'])
-
-        def part_data(part_nr):
-            data['s3_filename'] = key.format(part_nr)
-            data['multipart_params'].update({
-                'chunk': part_nr,
-                'Filename': key.format(part_nr),
-                'key': key.format(part_nr),
-            })
-            return data
-
-        return part_data
-
-    def _register_part(self, init_data, part_nr):
-        """ Registers an uploaded chunk in Bynder.
-        """
+    def _upload_chunk(self, file_id, data, chunk_nr):
+        self.session.headers['content-sha256'] = sha256(data).hexdigest()
         self.session.post(
-            '/v4/upload/',
-            data={
-                'id': init_data['s3file']['uploadid'],
-                'targetid': init_data['s3file']['targetid'],
-                'filename': init_data['s3_filename'],
-                'chunkNumber': part_nr
-            }
-        )
-
-    def _finalise_file(self, init_data, total_parts):
-        """ Finalises a completely uploaded file.
-        """
-        return self.session.post(
-            '/v4/upload/{0}/'.format(init_data['s3file']['uploadid']),
-            data={
-                'id': init_data['s3file']['uploadid'],
-                'targetid': init_data['s3file']['targetid'],
-                's3_filename': init_data['s3_filename'],
-                'chunks': total_parts
-            }
-        )
-
-    def _save_media(self, import_id, data, media_id=None):
-        """ Saves a new media asset in Bynder. If media id is specified
-        in the query a new version of the asset will be saved. Otherwise
-        a new asset will be saved.
-        """
-        poll_status = self._poll_status(import_id)
-        if import_id not in poll_status['itemsDone']:
-            raise Exception('Converting media failed')
-
-        save_endpoint = '/v4/media/save/{}/'.format(import_id)
-        if media_id:
-            save_endpoint = '/v4/media/{}/save/{}/'.format(
-                media_id, import_id)
-            data = {}
-
-        return self.session.post(
-            save_endpoint,
+            '/v7/file_cmds/upload/{}/chunk/{}'.format(file_id, chunk_nr),
             data=data
         )
 
-    def _poll_status(self, import_id):
-        """ Gets poll processing status of finalised files.
+    def _finalise_file(self, file_id, file_name, file_size, chunks_count):
+        """Finalises a completely uploaded file.
+        :param file_id: The file_id returned from the prepare endpoint.
+        :param file_name: The name of the file to be uploaded.
+        :param file_size: The size of the file to be uploaded.
+        :param chunks_count: The number of chunks in which the file was
+        uploaded.
         """
-        for _ in range(MAX_POLLING_ITERATIONS):
-            time.sleep(POLLING_IDLE_TIME)
-            status_dict = self.session.get(
-                '/v4/upload/poll/',
-                params={'items': [import_id]}
-            )
+        self.session.post(
+            '/v7/file_cmds/upload/{}/finalise_api'.format(file_id),
+            data={
+                'fileName': file_name,
+                'fileSize': file_size,
+                'chunksCount': chunks_count,
+                "sha256": self.file_sha256
+            }
+        )
 
-            if [v for k, v in status_dict.items() if import_id in v]:
-                return status_dict
-
-        # Max polling iterations reached => upload failed
-        status_dict['itemsFailed'].append(import_id)
-        return status_dict
+    def _save_media(self, file_id, data, media_id=None):
+        """Saves the completely uploaded file.
+        :param file_id: The uuid4 used to identify the file to be uploaded.
+        :param data: The upload_data containing asset information.
+        :param media_id: The media_id of the asset to be created or updated.
+        :return: - success: boolean that indicate the result of the upload
+        call.
+                - mediaitems: a list of mediaitems created, with at least
+                the original.
+                - batchId: the batchId of the upload.
+                - mediaId: the mediaId update or created.
+        """
+        # If the media_id is present, save the file as a new version of an
+        # existing asset.
+        if media_id:
+            save_endpoint = '/v4/media/{}/save/{}'.format(media_id,
+                                                          file_id)
+            data = {}
+            return self.session.post(save_endpoint, data=data)
+        # If the mediaId is missing then save the file as a new asset in
+        # which case a brandId must be specified.
+        if data['brandId']:
+            save_endpoint = '/v4/media/save/{}'.format(file_id)
+            return self.session.post(save_endpoint, data=data)
+        raise Exception('Invalid or empty brandId')
