@@ -100,8 +100,7 @@ class UploadClient:
                 'fileName': file_name,
                 'fileSize': file_size,
                 'chunksCount': chunks_count,
-                "sha256": self.file_sha256,
-                "intent": "upload_main_uploader_asset",
+                "sha256": self.file_sha256
             }
         )
 
@@ -126,7 +125,7 @@ class UploadClient:
             return self.session.post(save_endpoint, data=data)
         # If the mediaId is missing then save the file as a new asset in
         # which case a brandId must be specified.
-        if data['brandId'] and data['brandId'].strip():
+        if data['brandId']:
             save_endpoint = '/v4/media/save/{}'.format(file_id)
             return self.session.post(save_endpoint, data=data)
         raise Exception('Invalid or empty brandId')

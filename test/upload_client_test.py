@@ -75,8 +75,7 @@ class UploadClientTest(TestCase):
                 'fileName': file_name,
                 'fileSize': file_size,
                 'chunksCount': chunks_count,
-                'sha256': self.upload_client.file_sha256,
-                'intent': 'upload_main_uploader_asset'
+                'sha256': self.upload_client.file_sha256
             })
 
     def test_save_media(self):
