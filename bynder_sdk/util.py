@@ -31,6 +31,7 @@ class SessionMixin:
         if url.startswith('https'):
             # Do not send the Authorization header to S3
             kwargs['headers'] = {'Authorization': None}
+            kwargs['withhold_token'] = True
             return super().post(url, *args, **kwargs)
 
         return self.wrapped_request(super().post, url, *args, **kwargs)
