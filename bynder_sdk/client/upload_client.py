@@ -46,7 +46,7 @@ class UploadClient:
                 self.file_sha256 = sha256(f.read()).hexdigest()
             chunks_count, file_size = self._upload_chunks(file_path, file_id)
             self._finalise_file(file_id, file_name, file_size, chunks_count)
-            return self._save_media(file_id, upload_data, media_id)
+            return self._save_media(file_id, upload_data, file_name, media_id)
 
         except Exception as ex:
             return {'Message': 'Unable to upload the file.', 'Error': ex}
@@ -104,10 +104,11 @@ class UploadClient:
             }
         )
 
-    def _save_media(self, file_id, data, media_id=None):
+    def _save_media(self, file_id, data, file_name, media_id=None):
         """Saves the completely uploaded file.
         :param file_id: The uuid4 used to identify the file to be uploaded.
         :param data: The upload_data containing asset information.
+        :param file_name: The file_name of the asset to be created or updated.
         :param media_id: The media_id of the asset to be created or updated.
         :return: - success: boolean that indicate the result of the upload
         call.
@@ -116,6 +117,8 @@ class UploadClient:
                 - batchId: the batchId of the upload.
                 - mediaId: the mediaId update or created.
         """
+        if not data.get('name'):
+            data['name'] = file_name
         # If the media_id is present, save the file as a new version of an
         # existing asset.
         if media_id:

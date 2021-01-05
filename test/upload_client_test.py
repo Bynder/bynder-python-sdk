@@ -84,12 +84,13 @@ class UploadClientTest(TestCase):
         when not passed.
         """
         file_id = 1111
-        data = {'brandId': "89898989898-89898989-8989"}
+        file_name = 'test_file'
+        data = {'brandId': "89898989898-89898989-8989", 'name': file_name}
         media_id = "5656565656565656569-456"
-        self.upload_client._save_media(file_id, data)
+        self.upload_client._save_media(file_id, data, file_name)
         self.upload_client.session.post.assert_called_with(
             '/v4/media/save/{}'.format(file_id), data=data)
-        self.upload_client._save_media(file_id, data, media_id)
+        self.upload_client._save_media(file_id, data, file_name, media_id)
         self.upload_client.session.post.assert_called_with(
             '/v4/media/{}/save/{}'.format(media_id, file_id), data={})
 
@@ -98,5 +99,7 @@ class UploadClientTest(TestCase):
         the exception is raised or not.
         """
         file_id = 1111
+        file_name = 'test_file'
         with self.assertRaises(Exception):
-            self.upload_client._save_media(file_id, {'brandId': ''})
+            self.upload_client._save_media(file_id,
+                                           {'brandId': '', 'name': file_name})
