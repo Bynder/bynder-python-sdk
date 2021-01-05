@@ -102,4 +102,5 @@ class UploadClientTest(TestCase):
         file_name = 'test_file'
         with self.assertRaises(Exception):
             self.upload_client._save_media(file_id,
-                                           {'brandId': '', 'name': file_name})
+                                           {'brandId': '', 'name': file_name},
+                                           file_name)
