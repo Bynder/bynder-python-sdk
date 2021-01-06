@@ -26,7 +26,7 @@ def main():
     # Upload our file
     print('> Uploading {}'.format('example/image.png'))
     uploaded_file = asset_bank_client.upload_file(
-        file_path='example/image.png',
+        file_path='examples/image.png',
         brand_id=brands[0]['id']
     )
 
@@ -36,21 +36,26 @@ def main():
     # it can be fetched using the get_media method.
     print('> Querying for created asset')
     asset = None
-    while asset is None:
+    for i in range(60):
         try:
             asset = asset_bank_client.media_info(uploaded_file['mediaid'])
+            break
         except HTTPError as exc:
             if exc.response.status_code != 404:
                 raise
 
-            print('Asset not available yet..')
+            print('[{}] Asset not available yet, retrying in 1s'.format(i))
             time.sleep(1)
+
+    if asset is None:
+        print('Could not fetch asset, ending script')
+        return
 
     pp.pprint(asset)
 
     print('> Uploading a new version for the created asset')
     uploaded_version = asset_bank_client.upload_file(
-        file_path='example/image.png',
+        file_path='examples/image.png',
         brand_id=brands[0]['id'],
         media_id=asset['id']
     )

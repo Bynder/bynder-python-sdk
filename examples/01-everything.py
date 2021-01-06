@@ -215,7 +215,7 @@ def main():
 
     print('\n> Upload a file to the asset bank')
     uploaded_file = asset_bank_client.upload_file(
-        file_path='example/image.png',
+        file_path='examples/image.png',
         brand_id=brands[0]['id']
     )
 
