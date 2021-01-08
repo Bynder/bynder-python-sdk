@@ -47,8 +47,7 @@ Getting started
 ---------------
 
 This is a simple example on how to retrieve data from the Bynder asset
-bank. For a more detailed example of implementation refer to the [sample
-code](https://github.com/Bynder/bynder-python-sdk/blob/master/example/app.py).
+bank. For a more detailed example of implementation refer to the [examples](examples/).
 
 First import the BynderClient:
 
