@@ -1,6 +1,3 @@
-import random
-import string
-
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
 
@@ -28,17 +25,16 @@ class BynderOAuth2Session(OAuth2Session):
 
         kwargs['auto_refresh_url'] = oauth2_url(self.bynder_domain, 'token')
 
+        if kwargs['redirect_uri'] is None:
+            kwargs['client'] = BackendApplicationClient(client_id=kwargs['client_id'])
+
         super().__init__(*args, **kwargs)
 
         self.headers.update(UA_HEADER)
 
     def authorization_url(self):
-        state = ''.join([
-            random.choice(string.ascii_letters + string.digits)
-            for n in range(8)])
         return super().authorization_url(
             oauth2_url(self.bynder_domain, 'auth'),
-            state=state
         )
 
     def fetch_token(self, code, *args, **kwargs):
