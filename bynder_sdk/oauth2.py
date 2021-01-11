@@ -30,7 +30,7 @@ class BynderOAuth2Session(OAuth2Session):
 
         super().__init__(*args, **kwargs)
 
-        self._set_ua_header()
+        self.headers.update(UA_HEADER)
 
     def authorization_url(self):
         state = ''.join([
@@ -51,31 +51,21 @@ class BynderOAuth2Session(OAuth2Session):
             **kwargs
         )
 
-    def wrapped_request(self, func, endpoint, *args, **kwargs):
-        endpoint = api_endpoint_url(self, endpoint)
-        response = func(endpoint, *args, **kwargs)
+    def request(self, method, url, *args, **kwargs):
+        """ Custom wrapper which provides the following logic for
+        requests hitting the API:
+         - Update url to include configured domain
+         - Raise for exceptions
+         - Attempt to parse and return JSON
+        """
+        if url.startswith('https'):  # Requests from OAuth2Session
+            return super().request(method, url, *args, **kwargs)
+
+        url = api_endpoint_url(self, url)
+        response = super().request(method, url, *args, **kwargs)
         response.raise_for_status()
+
         try:
             return response.json()
         except ValueError:
             return response
-
-    def get(self, url, *args, **kwargs):
-        return self.wrapped_request(super().get, url, *args, **kwargs)
-
-    def post(self, url, *args, **kwargs):
-        if url.startswith('https'):
-            # Do not send the Authorization header to S3
-            kwargs['headers'] = {'Authorization': None}
-            kwargs['withhold_token'] = True
-            return super().post(url, *args, **kwargs)
-        return self.wrapped_request(super().post, url, *args, **kwargs)
-
-    def put(self, url, *args, **kwargs):
-        return self.wrapped_request(super().put, url, *args, **kwargs)
-
-    def delete(self, url, *args, **kwargs):
-        return self.wrapped_request(super().delete, url, *args, **kwargs)
-
-    def _set_ua_header(self):
-        self.headers.update(UA_HEADER)
