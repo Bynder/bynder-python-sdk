@@ -72,15 +72,6 @@ code = input('Code: ')
 bynder_client.fetch_token(code)
 ```
 
-When using a permanent token, the client instance can be created like this:
-
-```python
-bynder_client = BynderClient(
-  domain='portal.getbynder.com',
-  permanent_token=''
-)
-```
-
 Finally call one of the API's endpoints through one of the clients:
 
 ```python

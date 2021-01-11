@@ -4,7 +4,6 @@ from bynder_sdk.client.pim_client import PIMClient
 from bynder_sdk.client.upload_client import UploadClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
-from bynder_sdk.permanent_token import PermanentTokenSession
 
 REQUIRED_OAUTH_KWARGS = (
     'client_id', 'client_secret', 'redirect_uri', 'scopes')
@@ -17,33 +16,29 @@ class BynderClient:
 
     # pylint: disable-msg=too-many-arguments
     def __init__(self, domain, **kwargs):
-        if 'permanent_token' in kwargs:
-            self.session = PermanentTokenSession(
-                domain, kwargs['permanent_token'])
-        else:
-            missing = [
-                kw for kw in REQUIRED_OAUTH_KWARGS
-                if kwargs.get(kw) is None
-            ]
-            if missing:
-                raise TypeError(
-                    'Missing required arguments: {}'.format(missing)
-                )
-
-            self.session = BynderOAuth2Session(
-                domain,
-                kwargs['client_id'],
-                scope=kwargs['scopes'],
-                redirect_uri=kwargs['redirect_uri'],
-                auto_refresh_kwargs={
-                    'client_id': kwargs['client_id'],
-                    'client_secret': kwargs['client_secret']
-                },
-                token_updater=kwargs.get('token_saver', (lambda _: None))
+        missing = [
+            kw for kw in REQUIRED_OAUTH_KWARGS
+            if kwargs.get(kw) is None
+        ]
+        if missing:
+            raise TypeError(
+                'Missing required arguments: {}'.format(missing)
             )
 
-            if kwargs.get('token') is not None:
-                self.session.token = kwargs['token']
+        self.session = BynderOAuth2Session(
+            domain,
+            kwargs['client_id'],
+            scope=kwargs['scopes'],
+            redirect_uri=kwargs['redirect_uri'],
+            auto_refresh_kwargs={
+                'client_id': kwargs['client_id'],
+                'client_secret': kwargs['client_secret']
+            },
+            token_updater=kwargs.get('token_saver', (lambda _: None))
+        )
+
+        if kwargs.get('token') is not None:
+            self.session.token = kwargs['token']
 
         self.asset_bank_client = AssetBankClient(self.session)
         self.collection_client = CollectionClient(self.session)
