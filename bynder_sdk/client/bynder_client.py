@@ -5,8 +5,8 @@ from bynder_sdk.client.upload_client import UploadClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
 
-REQUIRED_OAUTH_KWARGS = (
-    'client_id', 'client_secret', 'redirect_uri', 'scopes')
+REQUIRED_OAUTH2_KWARGS = (
+    'client_id', 'client_secret', 'scopes')
 
 
 class BynderClient:
@@ -15,30 +15,26 @@ class BynderClient:
     """
 
     # pylint: disable-msg=too-many-arguments
-    def __init__(self, domain, **kwargs):
-        missing = [
-            kw for kw in REQUIRED_OAUTH_KWARGS
-            if kwargs.get(kw) is None
-        ]
-        if missing:
-            raise TypeError(
-                'Missing required arguments: {}'.format(missing)
-            )
-
+    def __init__(
+        self,
+        domain,
+        client_id,
+        client_secret,
+        scopes,
+        redirect_uri=None,
+        token=None,
+        token_saver=None,
+        **kwargs
+    ):
         self.session = BynderOAuth2Session(
             domain,
-            kwargs['client_id'],
-            scope=kwargs['scopes'],
-            redirect_uri=kwargs['redirect_uri'],
-            auto_refresh_kwargs={
-                'client_id': kwargs['client_id'],
-                'client_secret': kwargs['client_secret']
-            },
-            token_updater=kwargs.get('token_saver', (lambda _: None))
+            client_id=client_id,
+            client_secret=client_secret,
+            scope=scopes,
+            redirect_uri=redirect_uri,
+            token=token,
+            token_updater=token_saver or (lambda _: None)
         )
-
-        if kwargs.get('token') is not None:
-            self.session.token = kwargs['token']
 
         self.asset_bank_client = AssetBankClient(self.session)
         self.collection_client = CollectionClient(self.session)
@@ -49,12 +45,8 @@ class BynderClient:
     def get_authorization_url(self):
         return self.session.authorization_url()
 
-    def fetch_token(self, code, *args, **kwargs):
-        return self.session.fetch_token(
-            code=code,
-            *args,
-            **kwargs
-        )
+    def fetch_token(self, *args, **kwargs):
+        return self.session.fetch_token(*args, **kwargs)
 
     def derivatives(self):
         """ Gets the list of the derivatives configured for the current
