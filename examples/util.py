@@ -10,9 +10,23 @@ except ModuleNotFoundError as exc:
     raise RuntimeError(
         'Please run pip install . before running the examples') from exc
 
-TOKEN_ARGS = {'domain', 'access_token'}
-AUTH_CODE_FLOW_ARGS = {
-    'domain', 'client_id', 'client_secret', 'redirect_uri'}
+FLOWS = {
+    'token': {'domain', 'access_token'},
+    'authorization_code': {
+        'domain', 'client_id', 'client_secret', 'redirect_uri'},
+    'client_credentials': {'domain', 'client_id', 'client_secret'}
+}
+
+# Generate set of used config keys in all flows
+CONFIG_KEYS = {key for sublist in FLOWS.values() for key in sublist}
+
+
+def token_saver(token):
+    """ This function will be called by oauthlib-requests when a new
+    token is retrieved, either after the initial login or refreshing an
+    existing token. """
+    print('New token received:')
+    pp.pprint(token)
 
 
 def get_client(scopes):
@@ -24,47 +38,48 @@ def get_client(scopes):
     )
 
     # Build a dictionary based on the config file and environment variables
-    portal_config = {}
-    for key in TOKEN_ARGS | AUTH_CODE_FLOW_ARGS:
+    portal_config = {
+        'scopes': scopes,
+        'token_saver': token_saver,
+    }
+    for key in CONFIG_KEYS:
         config_key = 'BYNDER_{}'.format(key.upper())
         value = os.environ.get(
             config_key, config['DEFAULT'].get(config_key)) or None
         if value:
             portal_config[key] = value
 
-    use_token = TOKEN_ARGS.issubset(portal_config.keys())
-    use_auth_code_flow = AUTH_CODE_FLOW_ARGS.issubset(portal_config.keys())
+    use_token = FLOWS['token'].issubset(portal_config.keys())
+    use_auth_code_flow = FLOWS['authorization_code'].issubset(
+        portal_config.keys())
+    use_client_credentials_flow = FLOWS['client_credentials'].issubset(
+        portal_config.keys())
 
-    if not use_token and not use_auth_code_flow:
+    if not any((use_token, use_auth_code_flow, use_client_credentials_flow)):
         raise Exception(
-            'Missing required configuration, please make sure ' +
-            'one of the following sets is ' +
-            'configured: {} or {}'.format(TOKEN_ARGS, AUTH_CODE_FLOW_ARGS))
+            'Missing required configuration, please make sure one ' +
+            'of the following sets is configured: {}'.format(FLOWS.values()))
 
     if use_token:
         print('Access token passed, using arbitrary expiration of 60s')
         portal_config['token'] = {
             'token_type': 'bearer',
-            'expires_in': 60,
+            'expires_in': 0,
             'scopes': scopes,
             'access_token': portal_config['access_token']
         }
 
-    def token_saver(token):
-        """ This function will be called by oauthlib-requests when a new
-        token is retrieved, either after the initial login or refreshing an
-        existing token. """
-        print('New token received:')
-        pp.pprint(token)
+    client = BynderClient(**portal_config)
 
-    client = BynderClient(
-        **portal_config, scopes=scopes, token_saver=token_saver)
-
-    if not use_token and use_auth_code_flow:
+    if use_auth_code_flow and not use_token:
+        print('> Executing Authorization Code flow')
         print('> Generating authorization URL')
         print(client.get_authorization_url())
 
         code = input('Code: ')
         pp.pprint(client.fetch_token(code))
+
+    if use_client_credentials_flow:
+        print('> Executing Client Credentials flow')
 
     return client
