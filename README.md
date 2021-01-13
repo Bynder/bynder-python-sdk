@@ -8,9 +8,9 @@ The main goal of this SDK is to speed up the integration of Bynder
 customers who use Python. Making it easier to connect to the Bynder API
 (<https://bynder.docs.apiary.io>) and execute requests on it.
 
-_**Note:** As of version 1.0.0 this SDK now uses OAuth 2.0. For the last
-version using OAuth 1.0a please refer to
-[version 0.0.6](https://github.com/Bynder/bynder-python-sdk/tree/0.0.6)_.
+_**Note:** As of version 2.0.0 this SDK only supports OAuth2. Latest version
+supporting Permanent Tokens is [version 1.1.1](https://github.com/Bynder/bynder-python-sdk/tree/v1.1.1),
+latest version supporting OAuth1.0a is [version 0.0.6](https://github.com/Bynder/bynder-python-sdk/tree/0.0.6)_.
 
 Requirements and dependencies
 -----------------------------
@@ -49,41 +49,27 @@ Getting started
 This is a simple example on how to retrieve data from the Bynder asset
 bank. For a more detailed example of implementation refer to the [examples](examples/).
 
-First import the BynderClient:
-
 ```python
+# First import the BynderClient:
 from bynder_sdk import BynderClient
-```
 
-When using OAuth2, create an instance of the client and use the flow
-to receive a token:
-
-```python
+# Create an instance of the client
 bynder_client = BynderClient(
     domain='portal.getbynder.com',
-    redirect_uri='https://...',
+    redirect_uri='https://...',  # When using Client Credentials, do not pass redirect_uri
     client_id='',
     client_secret='',
     token_saver=token_saver
 )
 
+# When using Authorization Code, get the authorization url and pass
+# the received authorization code after granting authorization. With
+# Client Credentials, no action is required.
 print(bynder_client.get_authorization_url())
 code = input('Code: ')
 bynder_client.fetch_token(code)
-```
 
-When using a permanent token, the client instance can be created like this:
-
-```python
-bynder_client = BynderClient(
-  domain='portal.getbynder.com',
-  permanent_token=''
-)
-```
-
-Finally call one of the API's endpoints through one of the clients:
-
-```python
+# Call one of the API's endpoints through one of the clients:
 asset_bank_client = bynder_client.asset_bank_client
 media_list = asset_bank_client.media_list({
     'limit': 2,
