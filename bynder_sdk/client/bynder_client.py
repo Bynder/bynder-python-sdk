@@ -5,9 +5,6 @@ from bynder_sdk.client.upload_client import UploadClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
 
-REQUIRED_OAUTH2_KWARGS = (
-    'client_id', 'client_secret', 'scopes')
-
 
 class BynderClient:
     """ Main client used for setting up the OAuth2 session and
