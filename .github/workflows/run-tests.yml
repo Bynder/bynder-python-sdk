@@ -28,7 +28,9 @@ jobs:
       - name: Run tests	      
         run: |	       
           make test	       
-      - name: Coverage	      
+      - name: Coverage	   
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
         run: |	      
          coverage run --source=mypkg -m pytest test/
          coveralls   
