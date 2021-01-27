@@ -30,7 +30,8 @@ jobs:
           make test	       
       - name: Coverage	   
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          COVERALLS_SERVICE_NAME: github-actions  
         run: |	      
          coverage run --source=mypkg -m pytest test/
          coveralls   
