@@ -25,11 +25,10 @@ jobs:
           pip install coverage
           pip install coveralls
                  
-      - name: Run tests
-        run: |
-          make test
-      - name: Coverage
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          coveralls
+      - name: Run tests	      
+        run: |	       
+          make test	       
+      - name: Coverage	      
+        run: |	      
+         coverage run --source=mypkg -m pytest test/
+         coveralls   
