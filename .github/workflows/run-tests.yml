@@ -33,5 +33,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           COVERALLS_SERVICE_NAME: github-actions  
         run: |	      
-         coverage run --source=mypkg -m pytest --cov test/
          coveralls   
