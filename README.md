@@ -3,7 +3,7 @@ Bynder Python SDK
 
 ![Tests](https://github.com/Bynder/bynder-python-sdk/workflows/Tests/badge.svg)
 ![Publish](https://github.com/Bynder/bynder-python-sdk/workflows/Publish/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/Bynder/bynder-python-sdk/badge.svg?branch=master)](https://coveralls.io/github/Bynder/bynder-python-sdk?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/Bynder/bynder-python-sdk/badge.svg)](https://coveralls.io/github/Bynder/bynder-python-sdk)
 
 The main goal of this SDK is to speed up the integration of Bynder
 customers who use Python. Making it easier to connect to the Bynder API
