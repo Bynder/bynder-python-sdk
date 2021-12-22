@@ -152,7 +152,7 @@ All the collection related calls.
 
 ```python
 collections(query)
-collections_info(collection_id)
+collection_info(collection_id)
 create_collection(name, query)
 delete_collection(collection_id)
 collection_media_ids(collection_id)
