@@ -26,7 +26,7 @@ class BynderClient:
             ]
             if missing:
                 raise TypeError(
-                    'Missing required arguments: {}'.format(missing)
+                    f'Missing required arguments: {missing}'
                 )
 
             self.session = BynderOAuth2Session(

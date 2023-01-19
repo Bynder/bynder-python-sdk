@@ -20,7 +20,7 @@ class WorkflowClient:
         """ Gets all the campaign information for a specific campaign id.
         """
         return self.session.get(
-            '/workflow/campaigns/{0}/'.format(campaign_id)
+            f'/workflow/campaigns/{campaign_id}/'
         )
 
     # pylint: disable=too-many-arguments
@@ -42,7 +42,7 @@ class WorkflowClient:
         """ Deletes a campaign.
         """
         return self.session.delete(
-            '/workflow/campaigns/{0}/'.format(campaign_id)
+            f'/workflow/campaigns/{campaign_id}/'
         )
 
     def edit_campaign(self, campaign_id, name, key, description,
@@ -58,7 +58,7 @@ class WorkflowClient:
             'responsibleID': responsible_id
         })
         return self.session.put(
-            '/workflow/campaigns/{0}/'.format(campaign_id),
+            f'/workflow/campaigns/{campaign_id}/',
             json=query
         )
 
@@ -67,24 +67,24 @@ class WorkflowClient:
 
     def metaproperty_info(self, metaproperty_id):
         return self.session.get(
-            '/workflow/metaproperties/{}/'.format(metaproperty_id)
+            f'/workflow/metaproperties/{metaproperty_id}/'
         )
 
     def groups(self):
         return self.session.get('/workflow/groups/')
 
     def group_info(self, group_id):
-        return self.session.get('/workflow/groups/{}/'.format(group_id))
+        return self.session.get(f'/workflow/groups/{group_id}/')
 
     def job_preset_info(self, job_preset_id):
         return self.session.get(
-            '/workflow/presets/job/{}/'.format(job_preset_id)
+            f'/workflow/presets/job/{job_preset_id}/'
         )
 
     def jobs(self, campaign_id: str = None):
         if campaign_id:
             return self.session.get(
-                '/workflow/campaigns/{}/jobs/'.format(campaign_id)
+                f'/workflow/campaigns/{campaign_id}/jobs/'
             )
         return self.session.get('/workflow/jobs/')
 
@@ -101,7 +101,7 @@ class WorkflowClient:
         return self.session.post('/workflow/jobs/', json=query)
 
     def job_info(self, job_id):
-        return self.session.get('/workflow/jobs/{}/'.format(job_id))
+        return self.session.get(f'/workflow/jobs/{job_id}/')
 
     def edit_job(self, job_id, name, campaign_id, accountable_id,
                  preset_id, query: dict = None):
@@ -114,9 +114,9 @@ class WorkflowClient:
             'presetID': preset_id
         })
         return self.session.put(
-            '/workflow/jobs/{}/'.format(job_id),
+            f'/workflow/jobs/{job_id}/',
             json=query
         )
 
     def delete_job(self, job_id):
-        return self.session.delete('/workflow/jobs/{}/'.format(job_id))
+        return self.session.delete(f'/workflow/jobs/{job_id}/')

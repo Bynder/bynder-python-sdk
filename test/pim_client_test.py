@@ -35,7 +35,7 @@ class PIMClientTest(TestCase):
         """
         self.pim_client.metaproperty_info(metaproperty_id=1111)
         self.pim_client.session.get(
-            '/pim/metaproperties/{}/'.format(1111)
+            f'/pim/metaproperties/{1111}/'
         )
 
     def test_metaproperty_options(self):
@@ -45,7 +45,7 @@ class PIMClientTest(TestCase):
         """
         self.pim_client.metaproperty_options(metaproperty_id=1111)
         self.pim_client.session.get(
-            '/pim/metaproperties/{}/options/'.format(1111)
+            f'/pim/metaproperties/{1111}/options/'
         )
 
     def test_edit_metaproperty_option(self):
@@ -58,7 +58,7 @@ class PIMClientTest(TestCase):
             children=['2222', '3333']
         )
         self.pim_client.session.put.assert_called_with(
-            '/pim/metapropertyoptions/{}/'.format(1111),
+            f'/pim/metapropertyoptions/{1111}/',
             json={'children': ['2222', '3333']}
         )
 
@@ -67,6 +67,6 @@ class PIMClientTest(TestCase):
             children='2222'
         )
         self.pim_client.session.put.assert_called_with(
-            '/pim/metapropertyoptions/{}/'.format(1111),
+            f'/pim/metapropertyoptions/{1111}/',
             json={'children': ['2222']}
         )

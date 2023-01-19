@@ -7,8 +7,7 @@ from bynder_sdk.util import SessionMixin
 
 
 def oauth2_url(bynder_domain, endpoint):
-    return 'https://{}/v6/authentication/oauth2/{}'.format(
-        bynder_domain, endpoint)
+    return f'https://{bynder_domain}/v6/authentication/oauth2/{endpoint}'
 
 
 class BynderOAuth2Session(SessionMixin, OAuth2Session):

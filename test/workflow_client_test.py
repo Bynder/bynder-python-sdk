@@ -121,7 +121,7 @@ class WorkflowClientTest(TestCase):
         """
         self.workflow_client.metaproperty_info(metaproperty_id=1111)
         self.workflow_client.session.get.assert_called_with(
-            '/workflow/metaproperties/{}/'.format(1111)
+            f'/workflow/metaproperties/{1111}/'
         )
 
     def test_groups(self):
@@ -140,7 +140,7 @@ class WorkflowClientTest(TestCase):
         """
         self.workflow_client.group_info(1111)
         self.workflow_client.session.get.assert_called_with(
-            '/workflow/groups/{}/'.format(1111)
+            f'/workflow/groups/{1111}/'
         )
 
     def test_job_preset_info(self):
@@ -150,7 +150,7 @@ class WorkflowClientTest(TestCase):
         """
         self.workflow_client.job_preset_info(job_preset_id=1111)
         self.workflow_client.session.get.assert_called_with(
-            '/workflow/presets/job/{}/'.format(1111)
+            f'/workflow/presets/job/{1111}/'
         )
 
     def test_jobs(self):
@@ -159,7 +159,7 @@ class WorkflowClientTest(TestCase):
         """
         self.workflow_client.jobs(campaign_id=1111)
         self.workflow_client.session.get.assert_called_with(
-            '/workflow/campaigns/{}/jobs/'.format(1111)
+            f'/workflow/campaigns/{1111}/jobs/'
         )
         self.workflow_client.jobs()
         self.workflow_client.session.get.assert_called_with(
@@ -194,7 +194,7 @@ class WorkflowClientTest(TestCase):
         """
         self.workflow_client.job_info(job_id='1111')
         self.workflow_client.session.get.assert_called_with(
-            '/workflow/jobs/{}/'.format(1111)
+            f'/workflow/jobs/{1111}/'
         )
 
     def test_edit_job(self):
@@ -210,7 +210,7 @@ class WorkflowClientTest(TestCase):
             preset_id='job_preset_id'
         )
         self.workflow_client.session.put.assert_called_with(
-            '/workflow/jobs/{}/'.format(1111),
+            f'/workflow/jobs/{1111}/',
             json={
                 'name': 'job_name',
                 'campaignID': 'job_campaign_id',
@@ -226,5 +226,5 @@ class WorkflowClientTest(TestCase):
         """
         self.workflow_client.delete_job(job_id=1111)
         self.workflow_client.session.delete(
-            '/workflow/jobs/{}/'.format(1111)
+            f'/workflow/jobs/{1111}/'
         )
