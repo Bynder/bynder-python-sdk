@@ -93,10 +93,10 @@ class CollectionClientTest(TestCase):
         self.collection_client.remove_media_from_collection(
             collection_id=1111, media_ids=media_ids)
         self.collection_client.session \
-            .delete.assert_called_with(
-            '/v4/collections/1111/media/',
-            params={'deleteIds': ','.join(map(str, media_ids))}
-        )
+            .delete \
+            .assert_called_with('/v4/collections/1111/media/',
+                                params={'deleteIds': ','.join(map(str,
+                                                                  media_ids))})
 
     def test_share_collection(self):
         """ Test if when we call share collection it will use the correct

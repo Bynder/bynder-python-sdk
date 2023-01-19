@@ -167,10 +167,7 @@ class AssetBankClientTest(TestCase):
             asset_id=payload['asset_id']
         )
         self.asset_bank_client.session \
-            .delete.assert_called_with(
-            '/media/usage/',
-            params=payload
-        )
+            .delete.assert_called_with('/media/usage/', params=payload)
 
     def test_upload_file(self):
         """ Test if when we call upload_file it will use the correct params
