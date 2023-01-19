@@ -22,13 +22,13 @@ class OAuth2Test(TestCase):
     def test_oauth2_url(self):
         self.assertEqual(
             oauth2_url(TEST_DOMAIN, 'token'),
-            'https://{}/v6/authentication/oauth2/token'.format(TEST_DOMAIN),
+            f'https://{TEST_DOMAIN}/v6/authentication/oauth2/token',
         )
 
     def test_api_endpoint_url(self):
         self.assertEqual(
             api_endpoint_url(self.session, '/v4/users/'),
-            'https://{}/api/v4/users/'.format(TEST_DOMAIN)
+            f'https://{TEST_DOMAIN}/api/v4/users/'
         )
 
     @mock.patch('requests_oauthlib.OAuth2Session.authorization_url')

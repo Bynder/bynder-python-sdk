@@ -15,7 +15,7 @@ class CollectionClient:
     def collection_info(self, collection_id):
         """ Gets all the collection information for a specific collection id.
         """
-        return self.session.get('/v4/collections/{0}/'.format(collection_id))
+        return self.session.get(f'/v4/collections/{collection_id}/')
 
     def create_collection(self, name, query: dict = None):
         """ Creates a collection.
@@ -29,14 +29,14 @@ class CollectionClient:
         """ Deletes a collection.
         """
         return self.session.delete(
-            '/v4/collections/{0}/'.format(collection_id)
+            f'/v4/collections/{collection_id}/'
         )
 
     def collection_media_ids(self, collection_id):
         """ Gets a list of the media assets ids of a collection.
         """
         return self.session.get(
-            '/v4/collections/{0}/media/'.format(collection_id)
+            f'/v4/collections/{collection_id}/media/'
         )
 
     def add_media_to_collection(self, collection_id, media_ids: list):
@@ -46,7 +46,7 @@ class CollectionClient:
             'data': json.dumps(media_ids)
         }
         return self.session.post(
-            '/v4/collections/{0}/media/'.format(collection_id),
+            f'/v4/collections/{collection_id}/media/',
             data=query
         )
 
@@ -57,7 +57,7 @@ class CollectionClient:
             'deleteIds': ','.join(map(str, media_ids))
         }
         return self.session.delete(
-            '/v4/collections/{0}/media/'.format(collection_id),
+            f'/v4/collections/{collection_id}/media/',
             params=query
         )
 
@@ -68,14 +68,14 @@ class CollectionClient:
         collection_options = ['view', 'edit']
         if collection_option not in collection_options:
             raise ValueError(
-                'Invalid collection_option. Expected one of: {0}'.format(
-                    collection_options)
+                f'Invalid collection_option. Expected one of: '
+                f'{collection_options}'
             )
         if query is None:
             query = {}
         query['collectionOptions'] = collection_option
         query['recipients'] = ','.join(map(str, recipients))
         return self.session.post(
-            '/v4/collections/{0}/share/'.format(collection_id),
+            f'/v4/collections/{collection_id}/share/',
             data=query
         )
