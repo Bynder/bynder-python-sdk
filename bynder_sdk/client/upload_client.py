@@ -67,7 +67,7 @@ class UploadClient():
             'name': filename,
         })
 
-        key = '{}/p{{}}'.format(data['s3_filename'])
+        key = f'{data["s3_filename"]}/p{{}}'
 
         def part_data(part_nr):
             data['s3_filename'] = key.format(part_nr)
@@ -97,7 +97,7 @@ class UploadClient():
         """ Finalises a completely uploaded file.
         """
         return self.session.post(
-            '/v4/upload/{0}/'.format(init_data['s3file']['uploadid']),
+            f'/v4/upload/{init_data["s3file"]["uploadid"]}/',
             data={
                 'id': init_data['s3file']['uploadid'],
                 'targetid': init_data['s3file']['targetid'],
@@ -115,10 +115,9 @@ class UploadClient():
         if import_id not in poll_status['itemsDone']:
             raise Exception('Converting media failed')
 
-        save_endpoint = '/v4/media/save/{}/'.format(import_id)
+        save_endpoint = f'/v4/media/save/{import_id}/'
         if media_id:
-            save_endpoint = '/v4/media/{}/save/{}/'.format(
-                media_id, import_id)
+            save_endpoint = f'/v4/media/{media_id}/save/{import_id}/'
             data = {}
 
         return self.session.post(

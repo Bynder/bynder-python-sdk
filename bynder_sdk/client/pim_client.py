@@ -13,15 +13,14 @@ class PIMClient:
         """ Get metaproperty info about a specific metaproperty.
         """
         return self.session.get(
-            '/pim/metaproperties/{}/'.format(metaproperty_id)
+            f'/pim/metaproperties/{metaproperty_id}/'
         )
 
     def metaproperty_options(self, metaproperty_id, query: dict = None):
         """ Get list of metaproperty options.
         """
         return self.session.get(
-            '/pim/metaproperties/{}/options/'.format(
-                metaproperty_id),
+            f'/pim/metaproperties/{metaproperty_id}/options/',
             params=query or {}
         )
 
@@ -31,7 +30,6 @@ class PIMClient:
         if isinstance(children, str):
             children = [children]
         return self.session.put(
-            '/pim/metapropertyoptions/{}/'.format(
-                metaproperty_option_id),
+            f'/pim/metapropertyoptions/{metaproperty_option_id}/',
             json={'children': children}
         )

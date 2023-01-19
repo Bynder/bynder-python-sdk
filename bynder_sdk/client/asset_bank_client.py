@@ -33,7 +33,7 @@ class AssetBankClient:
         """ Gets all the media information for a specific media id.
         """
         return self.session.get(
-            '/v4/media/{0}/'.format(media_id),
+            f'/v4/media/{media_id}/',
             params=versions or {}
         )
 
@@ -41,7 +41,7 @@ class AssetBankClient:
         """ Gets the download file URL for a specific media id.
         """
         return self.session.get(
-            '/v4/media/{0}/download/'.format(media_id),
+            f'/v4/media/{media_id}/download/',
             params=query or {}
         )
 
@@ -49,14 +49,14 @@ class AssetBankClient:
         """ Updates the media properties (metadata) for a specific media id.
         """
         return self.session.post(
-            '/v4/media/{0}/'.format(media_id),
+            f'/v4/media/{media_id}/',
             data=query or {}
         )
 
     def delete_media(self, media_id):
         """ Deletes a media asset.
         """
-        return self.session.delete('/v4/media/{0}/'.format(media_id))
+        return self.session.delete(f'/v4/media/{media_id}/')
 
     def create_usage(self, integration_id, asset_id, query: dict = None):
         """ Creates a usage record for a media asset.

@@ -1,12 +1,12 @@
 from bynder_sdk.version import VERSION
 
 UA_HEADER = {
-    'User-Agent': 'bynder-python-sdk/{}'.format(VERSION)
+    'User-Agent': f'bynder-python-sdk/{VERSION}'
 }
 
 
 def api_endpoint_url(session, endpoint):
-    return 'https://{}/api{}'.format(session.bynder_domain, endpoint)
+    return f'https://{session.bynder_domain}/api{endpoint}'
 
 
 def parse_json_for_response(response):
