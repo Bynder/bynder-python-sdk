@@ -1,6 +1,8 @@
 class WorkflowClient:
-    """ Client used for all the operations that can be done to the workflow module.
+    """ Client used for all the operations that can be done to the workflow
+    module.
     """
+
     def __init__(self, session):
         self.session = session
 

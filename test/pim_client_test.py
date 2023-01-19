@@ -6,6 +6,7 @@ from test import create_bynder_client
 class PIMClientTest(TestCase):
     """ Test the PIM client.
     """
+
     def setUp(self):
         self.bynder_client = create_bynder_client()
 
@@ -18,7 +19,8 @@ class PIMClientTest(TestCase):
         self.pim_client = None
 
     def test_metaproperties(self):
-        """ Test if when we call metaproperties it will use the correct params for
+        """ Test if when we call metaproperties it will use the correct
+        params for
         the request and returns successfully.
         """
         self.pim_client.metaproperties()
@@ -27,7 +29,8 @@ class PIMClientTest(TestCase):
         )
 
     def test_metaproperty_info(self):
-        """ Test if when we call metaproperty info it will use the correct params
+        """ Test if when we call metaproperty info it will use the correct
+        params
         for the request and returns successfully.
         """
         self.pim_client.metaproperty_info(metaproperty_id=1111)
@@ -36,7 +39,8 @@ class PIMClientTest(TestCase):
         )
 
     def test_metaproperty_options(self):
-        """ Test if when we call meteproperty options it will use the correct params
+        """ Test if when we call meteproperty options it will use the
+        correct params
         for the request and returns successfully.
         """
         self.pim_client.metaproperty_options(metaproperty_id=1111)
@@ -45,7 +49,8 @@ class PIMClientTest(TestCase):
         )
 
     def test_edit_metaproperty_option(self):
-        """ Test if when we call edit metaproperty option it will use the correct
+        """ Test if when we call edit metaproperty option it will use the
+        correct
         params for the request and returns successfully.
         """
         self.pim_client.edit_metaproperty_option(

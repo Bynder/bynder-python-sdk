@@ -1,11 +1,9 @@
-
 from bynder_sdk.client.asset_bank_client import AssetBankClient
 from bynder_sdk.client.collection_client import CollectionClient
 from bynder_sdk.client.pim_client import PIMClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
 from bynder_sdk.permanent_token import PermanentTokenSession
-
 
 REQUIRED_OAUTH_KWARGS = (
     'client_id', 'client_secret', 'redirect_uri', 'scopes')
@@ -62,6 +60,7 @@ class BynderClient:
         )
 
     def derivatives(self):
-        """ Gets the list of the derivatives configured for the current account.
+        """ Gets the list of the derivatives configured for the current
+        account.
         """
         return self.session.get('/v4/account/derivatives/')
