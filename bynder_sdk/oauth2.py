@@ -38,3 +38,8 @@ class BynderOAuth2Session(SessionMixin, OAuth2Session):
             *args,
             **kwargs
         )
+
+    def post(self, url, *args, **kwargs):
+        if url.startswith('https'):
+            kwargs['withhold_token'] = True
+        return super(BynderOAuth2Session, self).post(url, *args, **kwargs)
