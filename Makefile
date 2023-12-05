@@ -1,3 +1,5 @@
+DISTNAME= $(shell python setup.py --name | sed 's/-/_/g' )
+
 .PHONY: test
 test: lint unittest
 
