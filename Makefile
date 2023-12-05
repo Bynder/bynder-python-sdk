@@ -41,3 +41,7 @@ typehint:
 .PHONY: executeSdkSample
 executeSdkSample:
 	docker-compose exec bynder-python-sdk python /app/samples/$(sample-file-name)
+
+.PHONY: stop-docker
+stop-docker:
+	docker-compose down

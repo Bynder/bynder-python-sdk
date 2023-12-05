@@ -222,23 +222,30 @@ Ensure the following are installed on your machine:
 Create a `secret.json` file by following the example provided in the project. Fill in the necessary settings based on your requirements. If you have a permanent token, only the domain and permanent_token fields need to be specified:
  ```
  {
-    "domain": "https://example.bynder.com/api/",
+    "domain": "example.bynder.com", # Without the http:// or https://
     "permanent_token": "7d09..........."
 }
  ```
 
 With `docker` and `docker-compose` installed, and your `secret.json` file ready, run the following command to initiate the container:
-```
+```bash
 docker-compose up -d
 ```
 This command initializes a container with the bynder-python-sdk installed and ready for use.
 
 ### Executing SDK Samples
 
-Utilize the `Makefile` command to run SDK sample scripts. The syntax is as follows:
-```
+You can utilize the `Makefile` commands on your console to run SDK sample scripts. The syntax is as follows:
+```bash
 make executeSdkSample sample-file-name=file.py
 ```
 All sample files are located in the `./samples` directory.
 
 > :warning: Caution: The sample scripts are provided as examples. It is crucial to review and modify the commands before execution. The container updates automatically with changes, ensuring a seamless development experience. Always exercise caution when executing scripts.
+
+## Stopping the Docker Container
+
+When you're done with your development or testing, you can stop the Docker container using the following command:
+
+```bash
+make stop-docker
