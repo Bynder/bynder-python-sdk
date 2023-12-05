@@ -1,5 +1,3 @@
-DISTNAME= $(shell python setup.py --name | sed 's/-/_/g' )
-
 .PHONY: test
 test: lint unittest
 
@@ -36,3 +34,8 @@ testdeps:
 .PHONY: typehint
 typehint:
 	mypy --ignore-missing-imports --follow-imports=skip $(DISTNAME)
+
+# make executeSdkSample sample-file-name=metaproperties.py
+.PHONY: executeSdkSample
+executeSdkSample:
+	docker-compose exec bynder-python-sdk python /app/samples/$(sample-file-name)
