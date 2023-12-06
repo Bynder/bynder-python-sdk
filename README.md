@@ -229,7 +229,7 @@ Create a `secret.json` file by following the example provided in the project. Fi
 
 With `docker` and `docker-compose` installed, and your `secret.json` file ready, run the following command to initiate the container:
 ```bash
-docker-compose up -d
+make run-docker
 ```
 This command initializes a container with the bynder-python-sdk installed and ready for use.
 
