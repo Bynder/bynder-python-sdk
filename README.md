@@ -202,5 +202,5 @@ You can run the tests by using the command below. This will install the
 packages required and execute the tests for all the clients.
 
 ```bash
-make test
+make test 
 ```
