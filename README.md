@@ -241,7 +241,7 @@ make executeSdkSample sample-file-name=file.py
 ```
 All sample files are located in the `./samples` directory.
 
-> :warning: Caution: The sample scripts are provided as examples. It is crucial to review and modify the commands before execution. The container updates automatically with changes, ensuring a seamless development experience. Always exercise caution when executing scripts.
+> :warning: Caution: The sample scripts are provided as examples. It is crucial to review, add and/or modify the commands before execution. The container updates automatically with changes, ensuring a seamless development experience. Always exercise caution when executing scripts.
 
 ## Stopping the Docker Container
 
@@ -249,3 +249,4 @@ When you're done with your development or testing, you can stop the Docker conta
 
 ```bash
 make stop-docker
+```
