@@ -1,0 +1,8 @@
+version: '3'
+services:
+  bynder-python-sdk:
+    container_name: bynder-python-sdk
+    build: .
+    command: sh -c "tail -f /dev/null"
+    volumes:
+      - .:/app

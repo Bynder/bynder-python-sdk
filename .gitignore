@@ -92,3 +92,9 @@ ENV/
 # OS generated files
 .DS_Store
 .idea/
+
+# Ignore secret files
+secret.json
+
+# Ignore volume folder created by docker
+app/

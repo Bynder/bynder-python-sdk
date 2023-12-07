@@ -204,3 +204,49 @@ packages required and execute the tests for all the clients.
 ```bash
 make test
 ```
+
+Docker Setup Guide
+-----------------
+
+The Docker setup allows you to run your Python scripts inside a Docker container, with dependencies installed and files synchronized. This guide aims to facilitate the development and testing of the SDK.
+
+### Requirements and dependencies
+
+Ensure the following are installed on your machine:
+
+-   [Docker](https://www.docker.com/get-started/)
+-   [docker-compose](https://docs.docker.com/compose/)
+
+### Initial Setup
+
+Create a `secret.json` file by following the example provided in the project. Fill in the necessary settings based on your requirements. If you have a permanent token, only the domain and permanent_token fields need to be specified:
+ ```
+ {
+    "domain": "example.bynder.com", # Without the http:// or https://
+    "permanent_token": "7d09..........."
+}
+ ```
+
+With `docker` and `docker-compose` installed, and your `secret.json` file ready, run the following command to initiate the container:
+```bash
+make run-docker
+```
+This command initializes a container with the bynder-python-sdk installed and ready for use.
+
+### Executing SDK Samples
+
+You can utilize the `Makefile` commands on your console to run SDK sample scripts. The syntax is as follows:
+```bash
+make executeSdkSample sample-file-name=file.py
+```
+All sample files are located in the `./samples` directory.
+
+> :warning: Caution: The sample scripts are provided as examples. It is crucial to review, add and/or modify the commands before execution. The container updates automatically with changes, ensuring a seamless development experience. Always exercise caution when executing scripts.
+
+## Stopping the Docker Container
+
+When you're done with your development or testing, you can stop the Docker container using the following command:
+
+```bash
+make stop-docker
+```
