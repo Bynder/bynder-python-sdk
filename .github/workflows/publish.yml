@@ -17,9 +17,9 @@ jobs:
         python-version: [ '3.8', '3.9', '3.10', '3.11' ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -27,14 +27,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install coverage
           pip install coveralls
-                 
-      - name: Run tests	      
-        run: |	       
+
+      - name: Run tests
+        run: |
           make unittest
-      - name: Coverage	   
+      - name: Coverage
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        run: |	      
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
          coveralls --service=github
 
   deploy:
@@ -43,9 +43,9 @@ jobs:
     needs: build
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install dependencies
