@@ -31,7 +31,7 @@ class BynderClient:
                 )
 
             # if client credentials use BackendApplicationClient from oauthlib, client suited for client credentials
-            client_credentials = BackendApplicationClient(kwargs['client_id']) if kwargs['client_credentials'] else None
+            client_credentials = BackendApplicationClient(kwargs['client_id']) if kwargs.get('client_credentials', None) else None
             self.session = BynderOAuth2Session(
                 domain,
                 kwargs['client_id'],
