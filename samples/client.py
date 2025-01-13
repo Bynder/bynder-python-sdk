@@ -39,10 +39,16 @@ class BynderClientAuthentication:
         #         "scope": ["offline"],
         #         "token_type": "bearer"
         #     }
-        if self.config_data.get('token', None) is None:
+
+        # auth code grant type
+        if self.config_data.get('token', None) is None and self.config_data.get('client_credentials', None) is None:
             print(bynder_client.get_authorization_url())
 
             code = input('Code: ')
             print(bynder_client.fetch_token(code))
+
+        # client credentials grant type
+        elif self.config_data.get('token', None) is None and self.config_data.get('client_credentials', None):
+            bynder_client.fetch_token(code=None)
 
         return bynder_client
