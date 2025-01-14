@@ -84,6 +84,36 @@ bynder_client = BynderClient(
   permanent_token=''
 )
 ```
+To use client credentials grant type, add the field `client_credentials` to `secret.json` and set the field to true. 
+
+```json
+{
+    "domain": "*****",
+    "client_id": "*****",
+    "client_secret": "******",
+    "client_credentials": true,
+    "scopes": ["asset.usage:write", "collection:write", "meta.workflow:read", "asset:write", "asset:read", "meta.assetbank:write", "collection:read", "admin.user:read", "meta.assetbank:read", "current.user:read", "current.profile:read", "offline", "admin.profile:read", "asset.usage:read", "admin.user:write"]
+}
+```
+``` python
+# client credentials grant type
+elif self.config_data.get('token', None) is None and self.config_data.get('client_credentials', None) == True:
+    bynder_client.fetch_token(code=None)
+```
+
+```python
+bynder_client = BynderClient(
+    **self.config_data,
+    token_saver=self.token_saver,  # optional, defaults to empty lambda
+)
+```
+Client credentials provided as keyword argument:
+```python
+bynder_client = BynderClient(
+    client_credentials=True,
+    token_saver=self.token_saver,  # optional, defaults to empty lambda
+)
+```
 
 Finally call one of the API's endpoints through one of the clients:
 
