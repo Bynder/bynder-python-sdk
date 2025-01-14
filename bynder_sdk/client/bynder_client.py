@@ -4,6 +4,7 @@ from bynder_sdk.client.pim_client import PIMClient
 from bynder_sdk.client.workflow_client import WorkflowClient
 from bynder_sdk.oauth2 import BynderOAuth2Session
 from bynder_sdk.permanent_token import PermanentTokenSession
+from oauthlib.oauth2 import BackendApplicationClient
 
 REQUIRED_OAUTH_KWARGS = (
     'client_id', 'client_secret', 'redirect_uri', 'scopes')
@@ -29,6 +30,8 @@ class BynderClient:
                     f'Missing required arguments: {missing}'
                 )
 
+            # if client credentials use BackendApplicationClient from oauthlib, client suited for client credentials
+            client_credentials = BackendApplicationClient(kwargs['client_id']) if kwargs.get('client_credentials', None) == True else None
             self.session = BynderOAuth2Session(
                 domain,
                 kwargs['client_id'],
@@ -38,7 +41,9 @@ class BynderClient:
                     'client_id': kwargs['client_id'],
                     'client_secret': kwargs['client_secret']
                 },
-                token_updater=kwargs.get('token_saver', (lambda _: None))
+                token_updater=kwargs.get('token_saver', (lambda _: None)),
+                # if client is None, default to WebApplicationClient which uses authorization_code grant type
+                client=client_credentials
             )
 
             if kwargs.get('token') is not None:
