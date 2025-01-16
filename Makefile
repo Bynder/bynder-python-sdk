@@ -49,3 +49,7 @@ run-docker:
 .PHONY: stop-docker
 stop-docker:
 	docker-compose down
+
+.PHONY: update-container-package
+update-container-package:
+	docker-compose exec bynder-python-sdk sh -c "pip install -e ."

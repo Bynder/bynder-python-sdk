@@ -273,6 +273,13 @@ All sample files are located in the `./samples` directory.
 
 > :warning: Caution: The sample scripts are provided as examples. It is crucial to review, add and/or modify the commands before execution. The container updates automatically with changes, ensuring a seamless development experience. Always exercise caution when executing scripts.
 
+Update the package within container to reflect local changes by running
+
+```bash
+make update-container-package
+```
+This will run `pip install -e .` inside the container to use local package changes.
+
 ## Stopping the Docker Container
 
 When you're done with your development or testing, you can stop the Docker container using the following command:
