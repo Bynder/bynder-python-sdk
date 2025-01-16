@@ -9,6 +9,8 @@ from oauthlib.oauth2 import BackendApplicationClient
 REQUIRED_OAUTH_KWARGS = (
     'client_id', 'client_secret', 'redirect_uri', 'scopes')
 
+REQUIRED_OAUTH_KWARGS_CLIENT_CREDENTIALS = ('client_id', 'client_secret')
+
 
 class BynderClient:
     """ Main client used for setting up the OAuth2 session and
@@ -21,22 +23,29 @@ class BynderClient:
             self.session = PermanentTokenSession(
                 domain, kwargs['permanent_token'])
         else:
-            missing = [
-                kw for kw in REQUIRED_OAUTH_KWARGS
-                if kwargs.get(kw) is None
-            ]
+            if kwargs.get('client_credentials', None):
+                missing = [
+                    kw for kw in REQUIRED_OAUTH_KWARGS_CLIENT_CREDENTIALS
+                    if kwargs.get(kw) is None
+                ]
+            else:
+                missing = [
+                    kw for kw in REQUIRED_OAUTH_KWARGS
+                    if kwargs.get(kw) is None
+                ]
+
             if missing:
                 raise TypeError(
                     f'Missing required arguments: {missing}'
                 )
 
             # if client credentials use BackendApplicationClient from oauthlib, client suited for client credentials
-            client_credentials = BackendApplicationClient(kwargs['client_id']) if kwargs.get('client_credentials', None) == True else None
+            client_credentials = BackendApplicationClient(kwargs['client_id']) if kwargs.get('client_credentials', None) else None
             self.session = BynderOAuth2Session(
                 domain,
                 kwargs['client_id'],
-                scope=kwargs['scopes'],
-                redirect_uri=kwargs['redirect_uri'],
+                scope=kwargs['scopes'] if kwargs.get('scopes', None) else None,
+                redirect_uri=kwargs['redirect_uri'] if kwargs.get('redirect_uri', None) else None,
                 auto_refresh_kwargs={
                     'client_id': kwargs['client_id'],
                     'client_secret': kwargs['client_secret']
