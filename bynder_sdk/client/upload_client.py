@@ -31,7 +31,7 @@ class UploadClient():
             total_parts = math.ceil(
                 os.stat(f.fileno()).st_size / MAX_CHUNK_SIZE)
 
-            filename = file_path.rsplit('/', 1)[-1]
+            filename = os.path.basename(file_path)
             build_part_data = self._init_upload(filename, total_parts)
 
             part_bytes = f.read(MAX_CHUNK_SIZE)
