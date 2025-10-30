@@ -1,4 +1,4 @@
-FROM python:3.13
+FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get clean && apt-get update
