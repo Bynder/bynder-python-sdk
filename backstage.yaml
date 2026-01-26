@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: bynder-python-sdk
+  description: Python SDK for Bynder API
+spec:
+  owner: integrations
+  lifecycle: production
